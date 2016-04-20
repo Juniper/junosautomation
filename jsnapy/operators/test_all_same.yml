@@ -1,0 +1,12 @@
+tests_include:
+  - test_flap_count
+
+test_flap_count:
+  - rpc: get-bgp-neighbor-information
+  - iterate:
+      xpath: '//bgp-information/bgp-peer'
+      tests:
+        - all-same: flap-count
+          err: "Test Failed!!! flap count are all same, it is <{{post['flap-count']}}>!! "
+          info: "Test Succeeded!! flap count are all different <{{post['flap-count']}}>!!!"
+

@@ -1,0 +1,10 @@
+tests_include:
+  - test_bgp_neighbor
+  - test_rpc_version
+
+# for simple, one test using command
+test_bgp_neighbor:
+  - command: show bgp neighbor
+
+test_rpc_version:
+  - rpc: get-software-information

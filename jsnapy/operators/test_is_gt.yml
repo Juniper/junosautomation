@@ -1,0 +1,13 @@
+tests_include:
+  - check_chassis_fpc
+
+check_chassis_fpc:
+  - command: show chassis fpc
+  - iterate:
+      id: ./memory-dram-size
+      xpath: //fpc[normalize-space(slot) = "0"]
+      tests:
+        - is-gt: cpu-total, 2
+          info: "Test Succeeded!!, cpu-total is greater than 2, it is  <{{post['cpu-total']}}> with id {{id_0}} and memory-heap-utilization: <{{post['memory-heap-utilization']}}>"
+          err: "Test Failed!!!, cpu-total is not greater than 2, it is <{{post['cpu-total']}}> with id {{id_0}} and memory-heap-utilization: <{{post['memory-heap-utilization']}}> "
+

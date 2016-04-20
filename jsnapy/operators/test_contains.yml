@@ -1,0 +1,13 @@
+tests_include:
+  - test_version_check
+
+test_version_check:
+  - command: show version invoke-on all-routing-engines
+  - iterate:
+      xpath: //software-information
+      id: ./host-name
+      tests:
+        - contains: //package-information/name[1], jbase
+          info: "Test Succeeded!! Junos version contains package name as jbase with hostname as <{{id_0}}>"
+          err: "Test Failed!!! Junos version does not contains package name as jbase"
+

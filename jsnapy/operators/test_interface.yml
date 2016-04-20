@@ -1,0 +1,24 @@
+tests_include:
+  - test_interface
+
+# use '/' in your test cases apart from xpath if u want to search all elements irrespective of hierarchy, ex: in id if u use /name instead of name
+# then it will search in all the names in given xpath irrespective of their position
+# for simple, one test using command
+
+test_interface:
+  - command: show interfaces terse 
+  - iterate:
+      xpath: '//physical-interface'
+      id: './name'
+      tests:
+        - no-diff: oper-status       # element in which test is performed
+          err: "Test Failed!! oper-status  got changed, before it was <{{pre['oper-status']}}>, now it is <{{post['oper-status']}}>"
+          info: "oper-status is same before it was <{{pre['oper-status']}}>, now it is <{{post['oper-status']}}>"
+
+        - list-not-less: oper-status
+          err: "name list changed, oper-state: <{{pre['oper-state']}}> with name <{{id_0}}> is not present in post-snap"
+          info: "name list is same, oper-state is present in pre-snap: <{{pre['oper-status']}}> and post-snap: <{{post['oper-status']}}>"
+
+        - list-not-more: name
+          err: "<{{post['name']}}> name is not present in pre snapshot"
+          info: "name is same, before it was <{{pre['name']}}>, now it is <{{post['name']}}>"

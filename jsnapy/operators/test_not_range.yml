@@ -1,0 +1,12 @@
+tests_include:
+  - check_chassis_fpc
+
+check_chassis_fpc:
+  - command: show chassis fpc
+  - iterate: 
+      xpath: fpc[normalize-space(slot) = "0"]
+      tests:
+        - not-range: memory-heap-utilization, 2 , 140
+          info: "Test Succeeded!! memory heap utilisation of the FPCs is not in range of 2-140, it is <{{post['memory-heap-utilization']}}> with temperature: <{{post['temperature']}}>"
+          err: "Test Failed!! memory heap utilisation of the FPCs is in range of 2-140, it is <{{post['memory-heap-utilization']}}> with temperature: <{{post['temperature']}}>"
+

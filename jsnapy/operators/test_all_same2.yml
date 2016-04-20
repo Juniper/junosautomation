@@ -1,0 +1,11 @@
+tests_include:
+  - test_check_interface_status
+
+test_check_interface_status:
+  - command: show interfaces terse ge-*
+  - iterate:
+      xpath: '//physical-interface'
+      tests:
+        - all-same: oper-status, [normalize-space(name) = "ge-0/0/0"]
+          err: "Test Failed!!! Operating status is not same for all interfaces !! "
+          info: "Test Succeeded!! Operating status is same for all interfaces !!!"

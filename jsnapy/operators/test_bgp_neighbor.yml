@@ -1,0 +1,45 @@
+tests_include:
+  - test_command_bgp
+  - test_rpc_bgp
+
+test_command_bgp:
+  - command: show bgp neighbor
+  - iterate:
+      xpath: '/bgp-information/bgp-peer'
+      tests:
+        - is-equal: peer-address, 10.209.19.203       # element in which test is performed
+          err: "Test Failed!! peer-address got changed, it is now <{{post['peer-address']}}>"
+          info: "Test succeeded!! peer-address is equal to <{{post['peer-address']}}>"
+
+        - in-range: peer-as, 100,900        # element in which test is performed
+          err: "Test Failed!! peer-as is not in range of 100-200, it is: <{{post['peer-as']}}>"
+          info: "Test succeeded!! peer-as is in range of 100-200, it is now <{{post['peer-as']}}>"
+
+  - iterate:
+      xpath: '//bgp-information/bgp-peer/bgp-option-information'
+      tests:
+        - is-gt: holdtime, 10       # element in which test is performed
+          err: "Test Failed!! holdtime is not greater than 10, it is: <{{post['holdtime']}}>"
+          info: "Test succeeded!! holdtime is greater than 10, it is: <{{post['holdtime']}}>"
+
+        - is-lt: preference, 200      # element in which test is performed
+          err: "Test Failed!! preference is not less than 10, <{{post['preference']}}>"
+          info: "Test succeeded!! preference is less than 10, <{{post['preference']}}>"
+
+test_rpc_bgp:
+  - rpc: get-bgp-neighbor-information
+  - iterate:
+      xpath: '//bgp-information/bgp-peer'
+      tests:
+        - not-equal: last-state,Idle       # element in which test is performed
+          err: "Test Failed!! last state is <{{post['last-state']}}>"
+          info: "Test succeeded!! last state is not equal to idle, it is: <{{post['last-state']}}>"
+
+        - all-same: flap-count
+          err: "Test Failed!!! flap count are not all same!!, it is <{{post['flap-count']}}> "
+          info: "Test Succeeded!! flap count are all same, it is now <{{post['flap-count']}}>!!!"
+
+        - is-equal: flap-count, 0
+          err: "Test Failed!!! flap count is not equal to 0, it is: <{{post['flap-count']}}> "
+          info: "Test Succeeded!! flap count is equal to <{{post['flap-count']}}> !!"
+

@@ -1,0 +1,12 @@
+tests_include:
+  - check_show_interfaces_terse
+
+check_show_interfaces_terse:
+  - command: show interfaces terse lo*
+  - iterate: 
+      xpath: //physical-interface[normalize-space(name) = "lo0"]
+      tests:
+        - not-in: oper-status, downward, upward
+          info: "Test Succeeded!! Physical operational status is not in  downward-upward, it is: <{{post['oper-status']}}> with admin status <{{post['admin-status']}}>"
+          err: "Test Failed!!! Physical operational status is in downward-upward, it is: <{{post['oper-status']}}> with admin status <{{post['admin-status']}}> "
+

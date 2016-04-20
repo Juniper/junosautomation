@@ -1,0 +1,18 @@
+tests_include:
+  - test_rpc_bgp
+
+test_rpc_bgp:
+  - command: show bgp summary
+  - iterate:
+      xpath: //bgp-information/bgp-peer
+      tests:
+        - is-equal: peer-state, Established
+          info: BGP peer {{post['peer-address']}} ({{post['peer-as']}}) is in Established State
+          err:  BGP Peer {{post['peer-address']}} ({{post['peer-as']}}) is in {{post['peer-state']}} state
+
+  - iterate:
+      xpath: //bgp-information/bgp-peer[normalize-space(peer-state)='Established']
+      tests:
+        - is-gt: elapsed-time/@seconds, 600
+          err:  BGP peer {{ post['peer-address']}} has an uptime of {{ post['elapsed-time/@seconds']}"
+          info: BGP peer {{ post['peer-address']}} is UP and Established

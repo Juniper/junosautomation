@@ -1,0 +1,13 @@
+tests_include:
+  - test_version_check
+
+test_version_check:
+  - command: show version
+  - iterate:
+      id: host-name
+      xpath: //software-information
+      tests:
+        - not-exists: //package-information/naame
+          info: "Test Succeeded!! node //package-information/naame does not exists "
+          err: "Test Failed!!! node //package-information/naame does exists with  hostname: <{{id_0}}> !! "
+

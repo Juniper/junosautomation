@@ -1,0 +1,11 @@
+tests_include:
+  - check_alarm
+
+check_alarm:
+  - command: show chassis alarms
+  - iterate:
+      xpath: //alarm-detail
+      tests:
+      - not-in: alarm-class, Major, Warning
+        info: No Major or Warning alarms
+        err:  Alarm {{post['alarm-class']}} - {{post['alarm-description'] }}

@@ -1,0 +1,7 @@
+tests_include:
+  - test_rpc_version
+
+test_rpc_version:
+  - rpc: get-config
+  - kwargs:
+      filter_xml: configuration/system/login

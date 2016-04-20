@@ -1,0 +1,12 @@
+tests_include:
+  - test_interfaces_terse
+
+test_interfaces_terse:
+  - command: show interfaces terse lo* 
+  - item:
+      id: ./name
+      xpath: //physical-interface[normalize-space(name) = "lo0"]
+      tests:
+        - not-equal: admin-status, up
+          info: "Test Succeeded !! admin-status is equal to <{{post['admin-status']}}> with oper-status <{{pre['oper-status']}}>"
+          err: "Test Failed !! admin-status is equal to up, it is <{{post['admin-status']}}> with oper-status <{{pre['oper-status']}}>"

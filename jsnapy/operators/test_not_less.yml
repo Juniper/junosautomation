@@ -1,0 +1,16 @@
+tests_include:
+  - test_command_version
+
+# use '/' in your test cases apart from xpath if u want to search all elements irrespective of hierarchy, ex: in id if u use /name instead of name
+# then it will search in all the names in given xpath irrespective of their position
+
+test_command_version:
+  - command: show interfaces terse lo*
+  - iterate:
+      xpath: physical-interface
+      id: './name'
+      tests:
+        - list-not-less: admin-status
+          err: "Test Failed!! name list changed, <{{pre['admin-status']}}>  with name <{{id_0}}> is not found in post snapshot"
+          info: "Test successful!! name list is same, with name <{{id_0}}>"
+

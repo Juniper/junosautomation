@@ -1,0 +1,147 @@
+tests_include:
+  - check_int_ext
+
+check_int_ext:
+    - command: show interfaces extensive
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(admin-status)='up' and logical-interface/address-family/address-family-name ]
+        tests:
+          - is-equal: oper-status, up
+            info: "Interface {{post['name']}} with Admin UP and Family defined are UP"
+            err: Interface {{post['name']}} is not UP UP
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(admin-status)="up" and logical-interface/address-family/address-family-name and interface-flapped/@seconds != '0']
+        tests:
+          - is-gt: interface-flapped/@seconds, 600
+            info: Interfaces {{ post['name'] }} with family defined are UP for more than 10 min ({{post['interface-flapped/@seconds']}}s)
+            err: Interface {{post['name']}} is Up since {{post['interface-flapped/@seconds']}} seconds
+
+    ## INPUT / OUTPUT ERRORS
+    - iterate:
+        xpath:  //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-errors]
+        tests:
+          - is-equal: input-error-list/input-errors, 0
+            info: Interface {{post['name']}} doesn't have input error
+            err: Interface {{post['name']}} has {{post['input-error-list/input-errors']}} input errors
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/output-errors]
+        tests:
+          - is-equal: output-error-list/output-errors, 0
+            info: Interface {{post['name']}} doesn't have output error
+            err: Interface {{post['name']}} has {{post['output-error-list/output-errors']}} output errors
+
+    ## INPUT / OUTPUT DROPS
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-drops]
+        tests:
+          - is-equal: input-error-list/input-drops, 0
+            info: Interface {{post['name']}} doesn't have input drops
+            err: Interface {{post['name']}} has {{post['input-error-list/input-drops']}} input drops
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/output-drops]
+        tests:
+          - is_equal: output-error-list/output-drops, 0
+            info: Interface {{post['name']}} doesn't have output drops
+            err: Interface {{post['name']}} has {{post['output-error-list/output-drops']}} output drops
+
+    ## INPUT / OUTPUT RESOURCES ERROR
+    - iterate:
+        xpath:  //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-resource-errors]
+        tests:
+          - is-equal: input-error-list/input-resource-errors, 0
+            info: Interface {{post['name']}} doesn't have input resource error
+            err: Interface {{post['name']}} has {{post['input-error-list/input-resource-errors']}} input resource error
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/output-resource-errors]
+        tests:
+          - is-equal: output-error-list/output-resource-errors, 0
+            info: Interface {{post['name']}} doesn't have output resource error
+            err: Interface {{post['name']}} has {{post['output-error-list/output-resource-errors']}} output resource error
+
+    ##  Other OUTPUT checks
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/carrier-transitions]
+        tests:
+          - is-lt: output-error-list/carrier-transitions, 10
+            info: Interface {{post['name']}} has less than 10 output carrier transition
+            err: Interface {{post['name']}} has {{post['output-error-list/carrier-transitions']}} output carrier transitions
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/output-collisions]
+        tests:
+          - is-equal: output-error-list/output-collisions, 0
+            info: Interface {{post['name']}} doesn't have output collision
+            err: Interface {{post['name']}} has {{post['output-error-list/output-collisions']}} output carrier transitions
+
+    - iterate:
+        xpath:  //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/mtu-errors]
+        tests:
+          - is-equal: output-error-list/mtu-errors, 0
+            info: Interface {{post['name']}} doesn't have mtu error
+            err: Interface {{post['name']}} has {{post['output-error-list/mtu-errors']}} output mtu errors
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/hs-link-crc-errors]
+        tests:
+          - is-equal: output-error-list/hs-link-crc-errors, 0
+            info:     Interface {{post['name']}} doesn't have crc error
+            err:      Interface {{post['name']}} has {{post['output-error-list/hs-link-crc-errors']}} output crc error
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and output-error-list/output-fifo-errors]
+        tests:
+          - is-equal: output-error-list/output-fifo-errors, 0
+            info:     Interface {{post['name']}} doesn't have fifo error
+            err:      Interface {{post['name']}} has {{post['output-error-list/output-fifo-errors']}} output fifo errors
+
+    ##  Other INPUT checks
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/framing-errors]
+        tests:
+          - is-equal: input-error-list/framing-errors, 0
+            info:     Interface {{post['name']}} doesn't have input framing error
+            err:      Interface {{post['name']}} has {{post['input-error-list/framing-errors']}} input framing errors
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-runts]
+        tests:
+          - is-equal: input-error-list/input-runts, 0
+            info:     Interface {{post['name']}} doesn't have input runts error
+            err:      Interface {{post['name']}} has {{post['input-error-list/input-runts']}} input runts errors
+
+    - iterate:
+        xpath:  //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-discards]
+        tests:
+          - is-equal: input-error-list/input-discards, 0
+            info:     Interface {{post['name']}} doesn't have input discard error
+            err:      Interface {{post['name']}} has {{post['input-error-list/input-discards']}} input discard errors
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-l3-incompletes]
+        tests:
+          - is-equal: input-error-list/input-l3-incompletes, 0
+            info:     Interface {{post['name']}} doesn't have input L3 incomplete error
+            err:     Interface {{post['name']}} has {{post['input-error-list/input-l3-incompletes']}} input L3 incomplete errors
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-l2-channel-errors]
+        tests:
+          - is-equal: input-error-list/input-l2-channel-errors, 0
+            info:     Interface {{post['name']}} doesn't have input L2 Channel Error
+            err:      Interface {{post['name']}} has {{post['input-error-list/input-l2-channel-errors']}} input L2 Channel Errors
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-l2-mismatch-timeouts]
+        tests:
+          - is-equal: input-error-list/input-l2-mismatch-timeouts, 0
+            info:     Interface {{post['name']}} doesn't have input L2 mismatch timeout
+            err:      Interface {{post['name']}} has {{post['input-error-list/input-l2-mismatch-timeouts']}} input L2 mismatch timeout
+
+    - iterate:
+        xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-fifo-errors]
+        tests:
+          - is-equal: input-error-list/input-fifo-errors, 0
+            info:     Interface {{post['name']}} doesn't have input FIFO error
+            err:      Interface {{post['name']}} has {{post['input-error-list/input-fifo-errors']}} input FIFO errors

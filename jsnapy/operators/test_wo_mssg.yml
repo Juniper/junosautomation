@@ -1,0 +1,10 @@
+tests_include:
+  - test_interfaces_terse
+
+test_interfaces_terse:
+  - command: show interfaces terse lo* 
+  - item:
+      id: ./name
+      xpath: //physical-interface[normalize-space(name) = "lo0"]
+      tests:
+        - is-equal: admin-status, down
