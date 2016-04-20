@@ -2,8 +2,8 @@
 
 File name  | Description
 ------------- | -------------
-Markup :  [gather_facts.py](https://github.com/Juniper/automation-examples/blob/master/pyez/gather_facts.py) | Returns device facts in Dictionary form
-Markup :  [rpc_call.py](https://github.com/Juniper/automation-examples/blob/master/pyez/rpc_call.py)  | To call junos rpc  
+[gather_facts.py](https://github.com/Juniper/automation-examples/blob/master/pyez/gather_facts.py) | Returns device facts in Dictionary form
+[rpc_call.py](https://github.com/Juniper/automation-examples/blob/master/pyez/rpc_call.py)  | To call junos rpc  
 
 ## BLOGS
 
