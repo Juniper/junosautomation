@@ -1,0 +1,17 @@
+interfaces { 
+    {% for item in interfaces %}
+    {{ item }} {
+        description "{{ description }}";
+        unit 0 {
+            family {{ family }};
+        }      
+    } {% endfor %}    
+}
+protocols {
+    mpls { 
+        {% for item in interfaces %} 
+        interface {{ item }}; 
+        {% endfor %}    
+    }
+}
+

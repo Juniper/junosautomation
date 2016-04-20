@@ -1,0 +1,6 @@
+---
+interfaces:
+  - ge-1/0/1
+  - ge-1/0/2
+description: 'MPLS interface'
+family: mpls
