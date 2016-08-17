@@ -1,0 +1,12 @@
+[submodule "ansible/ansible-demo-ip-fabric"]
+	path = ansible/ansible-demo-ip-fabric
+	url = https://github.com/JNPRAutomate/ansible-demo-ip-fabric
+[submodule "ansible/ansible-junos-evpn-vxlan"]
+	path = ansible/ansible-junos-evpn-vxlan
+	url = https://github.com/JNPRAutomate/ansible-junos-evpn-vxlan
+[submodule "ansible/ansible-junos-evpn-mpls"]
+	path = ansible/ansible-junos-evpn-mpls
+	url = https://github.com/JNPRAutomate/ansible-junos-evpn-mpls
+[submodule "ansible/ansible-junos-examples"]
+	path = ansible/ansible-junos-examples
+	url = https://github.com/JNPRAutomate/ansible-junos-examples
