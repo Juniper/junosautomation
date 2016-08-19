@@ -1,5 +1,8 @@
-@import url("theme.css");
+
+.wy-side-nav-search {
+  background-color: #F980F9;
+}
 
 .wy-nav-top {
-    background: #F980F9;
+  background: #F980F9;
 }
