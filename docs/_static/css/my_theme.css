@@ -1,0 +1,13 @@
+@import url("theme.css");
+
+.wy-nav-top {
+  background: #3980F9;
+}
+
+.wy-side-nav-search {
+  background-color: #3980F9;
+}
+
+.wy-nav-content {
+    max-width: 100%;
+}
