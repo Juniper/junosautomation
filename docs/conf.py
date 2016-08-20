@@ -18,7 +18,62 @@
 #
 import os
 import sys
+from jinja2 import Template
 # sys.path.insert(0, os.path.abspath('.'))
+
+############################
+def make_table(grid):
+    max_cols = [max(out) for out in map(list, zip(*[[len(item) for item in row] for row in grid]))]
+    rst = table_div(max_cols, 1)
+
+    for i, row in enumerate(grid):
+        header_flag = False
+        if i == 0 or i == len(grid)-1: header_flag = True
+        rst += normalize_row(row,max_cols)
+        rst += table_div(max_cols, header_flag )
+    return rst
+
+def table_div(max_cols, header_flag=1):
+    out = ""
+    if header_flag == 1:
+        style = "="
+    else:
+        style = "-"
+
+    for max_col in max_cols:
+        out += max_col * style + " "
+
+    out += "\n"
+    return out
+
+
+def normalize_row(row, max_cols):
+    r = ""
+    for i, max_col in enumerate(max_cols):
+        r += row[i] + (max_col  - len(row[i]) + 1) * " "
+
+    return r + "\n"
+
+
+# -- Collect Information on all Repos/Directory
+
+jet_app_info = [
+        ['Name', 'Description', 'Author', 'Support Type', 'Unit Test', 'Doc' ],
+        ['Dynamic-COS-App', 'Description', 'me', 'Community', '`Yes <http://travis-ci.org/>`_', '`Link <http://example.com/>`_' ],
+        ['Microwave-BW-Notification-App', 'Description', 'you', 'JDI', 'No', 'link' ],
+        ['Programmable-RR', 'Description', 'them', 'JTAC', 'Yes', 'link' ]
+    ]
+
+tpl_var = {}
+tpl_var['table'] = make_table(jet_app_info)
+# -- Generate RST files based on Jinja file
+
+jet_file = open("jet.rst.j2")
+jet_tpl = Template(jet_file.read())
+jet_rst = jet_tpl.render( tpl_var )
+
+with open("jet.rst", "w") as text_file:
+    text_file.write(jet_rst)
 
 # -- General configuration ------------------------------------------------
 

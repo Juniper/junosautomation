@@ -8,11 +8,11 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   ansible
-   pyez
-   jet
-   contribution
-   documentation
+   ansible.rst
+   pyez.rst
+   jet.rst
+   contribution.rst
+   documentation.rst
 
 Indices and tables
 ==================

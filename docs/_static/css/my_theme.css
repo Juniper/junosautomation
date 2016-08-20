@@ -1,8 +1,13 @@
-
-.wy-side-nav-search {
-  background-color: #F980F9;
-}
+@import url("theme.css");
 
 .wy-nav-top {
-  background: #F980F9;
+  background: #3980F9;
+}
+
+.wy-side-nav-search {
+  background-color: #3980F9;
+}
+
+.wy-nav-content {
+    max-width: 100%;
 }
