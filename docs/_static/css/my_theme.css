@@ -12,9 +12,8 @@
     max-width: 100%;
 }
 
-
 .jnpr-name {
-  width: 120px !important;
+  width: 100px !important;
 }
 
 td.jnpr-test, td.jnpr-doc {
@@ -23,6 +22,10 @@ td.jnpr-test, td.jnpr-doc {
 
 .jnpr-support {
   width: 60px !important;
+}
+
+.jnpr-author, .jnpr-support, .jnpr-update {
+  text-align: center !important;
 }
 
 .jnpr-table th {
