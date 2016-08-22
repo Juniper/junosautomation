@@ -22,50 +22,36 @@ from jinja2 import Template
 # sys.path.insert(0, os.path.abspath('.'))
 
 ############################
-def make_table(grid):
-    max_cols = [max(out) for out in map(list, zip(*[[len(item) for item in row] for row in grid]))]
-    rst = table_div(max_cols, 1)
-
-    for i, row in enumerate(grid):
-        header_flag = False
-        if i == 0 or i == len(grid)-1: header_flag = True
-        rst += normalize_row(row,max_cols)
-        rst += table_div(max_cols, header_flag )
-    return rst
-
-def table_div(max_cols, header_flag=1):
-    out = ""
-    if header_flag == 1:
-        style = "="
-    else:
-        style = "-"
-
-    for max_col in max_cols:
-        out += max_col * style + " "
-
-    out += "\n"
-    return out
-
-
-def normalize_row(row, max_cols):
-    r = ""
-    for i, max_col in enumerate(max_cols):
-        r += row[i] + (max_col  - len(row[i]) + 1) * " "
-
-    return r + "\n"
-
 
 # -- Collect Information on all Repos/Directory
-
-jet_app_info = [
-        ['Name', 'Description', 'Author', 'Support Type', 'Unit Test', 'Doc' ],
-        ['Dynamic-COS-App', 'Description', 'me', 'Community', '`Yes <http://travis-ci.org/>`_', '`Link <http://example.com/>`_' ],
-        ['Microwave-BW-Notification-App', 'Description', 'you', 'JDI', 'No', 'link' ],
-        ['Programmable-RR', 'Description', 'them', 'JTAC', 'Yes', 'link' ]
+jet_app_info = { 'projects': [
+        { 'name': 'Dynamic-COS-App',
+          'description': 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries,',
+          'author': 'me',
+          'support': 'Community',
+          'test': { 'url': 'http://travis-ci.org/'},
+          'doc': { 'url': 'https://readthedocs.org/'} },
+        { 'name': 'Microwave-BW-Notification-App',
+          'description': 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum',
+          'author': 'You',
+          'support': 'JDI',
+          'doc': { 'url': 'https://readthedocs.org/'} },
+        { 'name': 'Programmable-RR',
+          'description': 'Description',
+          'author': 'them',
+          'support': 'JTAC',
+          'update': '1 month ago',
+          'test': { 'url': 'http://travis-ci.org/'} },
     ]
+}
+
+table_file = open("table-html.j2")
+table_tpl = Template(table_file.read())
+jet_table_html = table_tpl.render( jet_app_info )
 
 tpl_var = {}
-tpl_var['table'] = make_table(jet_app_info)
+tpl_var['table'] = jet_table_html
+
 # -- Generate RST files based on Jinja file
 
 jet_file = open("jet.rst.j2")
@@ -183,9 +169,9 @@ on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
 if not on_rtd:  # only import and set the theme if we're building docs locally
   import sphinx_rtd_theme
+  html_style = 'css/my_theme.css'
   html_theme = 'sphinx_rtd_theme'
   html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-  html_style = 'css/my_theme.css'
 else:
   html_context = {
     'css_files': [
