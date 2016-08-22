@@ -1,0 +1,38 @@
+    <table style="width:100%;white-space:normal;" border=1 class="docutils jnpr-table" >
+      <thead>
+        <tr>
+           <th class="jnpr-name">Project</th>
+           <th class="jnpr-desc">Description</th>
+           <th class="jnpr-author"  >Author</th>
+           <th class="jnpr-test">Unit Test</th>
+           <th class="jnpr-doc">Docs</th>
+           <th class="jnpr-support" >Support</th>
+           <th class="jnpr-update">Last Update</th>
+        </tr>
+      <thead>
+      <tbody>
+{% for project in projects %}
+        <tr>
+          <td class="jnpr-name">{{ project.name }}</td>
+          <td class="jnpr-desc">{{ project.description | default('') }}</td>
+          <td class="jnpr-author">{{ project.author | default('anomymous') }}</td>
+          <td class="jnpr-test">
+{% if project.test is defined %}
+            <a href="{{ project.test.url }}">
+              <img src="_static/images/check-mark.png" alt="Unit Test" width="35" height="35" border="0">
+            </a>
+{% endif %}
+          </td>
+          <td class="jnpr-doc" >
+{% if project.doc is defined %}
+            <a href="{{ project.doc.url }}">
+              <img src="_static/images/check-mark.png" alt="Unit Test" width="35" height="35" border="0">
+            </a>
+{% endif %}
+          </td>
+          <td class="jnpr-support">{{ project.support | default('None') }}</td>
+          <td class="jnpr-update">{{ project.last_update | default('Never') }}</td>
+        </tr>
+{% endfor %}
+      <tbody>
+    </table>
