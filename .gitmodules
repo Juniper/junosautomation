@@ -13,3 +13,6 @@
 [submodule "jet/jet-app-store"]
 	path = jet/jet-app-store
 	url = https://github.com/Juniper/jet-app-store
+[submodule "slax/junoscriptorium"]
+	path = slax/junoscriptorium
+	url = https://github.com/Juniper/junoscriptorium
