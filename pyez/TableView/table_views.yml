@@ -1,0 +1,134 @@
+# -------------------------------------------------------------------
+# Table
+# -------------------------------------------------------------------
+# retrieve the chassis hardware (inventory) and extract the Chassis
+# items.
+# -------------------------------------------------------------------
+
+---
+ChassisInventoryTable:
+    rpc: get-chassis-inventory
+    item: .//name[starts-with(.,'Chassis')]/parent::*
+    view: _chassis_inventory_view
+
+# -------------------------------------------------------------------
+# View
+# -------------------------------------------------------------------
+# use the underscore (_) so this definition is not
+# imported into the glboal namespace. We want to extract various
+# bits of information from the Chassis items
+# -------------------------------------------------------------------
+
+_chassis_inventory_view:
+    fields:
+        name: name
+        desc: description
+        sn: serial-number
+        FPM: FpmHwTable
+        FDM: FpmHwTable
+        PEM: PemHwTable
+        RE: ReHwTable
+        FPC: FpcHwTable
+
+FpmHwTable:
+    item: .//name[starts-with(.,'FPM')]/parent::*
+    view: _fpm_hw_view
+_fpm_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+FdmHwTable:
+    item: .//name[starts-with(.,'FDM')]/parent::*
+    view: _fdm_hw_view
+_fdm_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+PemHwTable:
+    item: .//name[starts-with(.,'PEM')]/parent::*
+    view: _pem_hw_view
+
+PemHwTable:
+    item: .//name[starts-with(.,'PEM')]/parent::*
+    view: _pem_hw_view
+_pem_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+ReHwTable:
+    item: .//name[starts-with(.,'Routing Engine')]/parent::*
+    view: _re_hw_view
+_re_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+
+FpcHwTable:
+    item: .//name[starts-with(.,'FPC')]/parent::*
+    view: _fpc_hw_view
+
+_fpc_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+        MIC: MicHwTable
+        PIC: PicHwTable
+MicHwTable:
+    item: .//name[starts-with(.,'MIC')]/parent::*
+    view: _mic_hw_view
+_mic_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        model: model-number
+        desc: description
+        PIC: PicHwTable
+
+PicHwTable:
+    item: .//name[starts-with(.,'PIC')]/parent::*
+    view: _pic_hw_view
+_pic_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        desc: description
+        PORT: PortHwTable
+
+PortHwTable:
+    item: .//name[starts-with(.,'Xcvr')]/parent::*
+    view: _port_hw_view
+_port_hw_view:
+    fields:
+        name: name
+        sn: serial-number
+        pn: part-number
+        ver: version
+        desc: description
+        
