@@ -1,4 +1,10 @@
 #!/bin/sh
+#
+# Copyright (c) 1999-2017, Juniper Networks Inc.
+#
+# All rights reserved.
+#
+#
 
 CLI=/usr/sbin/cli
 FETCH=/usr/bin/fetch-secure
