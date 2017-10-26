@@ -9,3 +9,7 @@ with Device(host='X.X.X.X', user='root', password='password', mode='telnet', por
     cu = Config(dev)
     cu.load(path='/var/tmp/mx001-svn.conf', format='text', overwrite=True)
     print "Configuration Committed:", cu.commit()
+
+# Script output
+# automation@automation:~/pyezcookbook$ python initialconf.py
+# Configuration Committed: True
