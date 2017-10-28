@@ -11,5 +11,5 @@ with Device(host='X.X.X.X', user='root', password='password', mode='telnet', por
     print "Configuration Committed:", cu.commit()
 
 # Script output
-# automation@automation:~/pyezcookbook$ python initialconf.py
+# automation@automation:~/pyezcookbook$ python initialinstall.py
 # Configuration Committed: True
