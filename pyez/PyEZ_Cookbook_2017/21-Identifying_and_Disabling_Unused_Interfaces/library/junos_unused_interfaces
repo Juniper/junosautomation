@@ -1,0 +1,117 @@
+#!/usr/bin/env python
+
+# required Ansible helper module
+from ansible.module_utils.basic import AnsibleModule
+
+# required Python modules
+module_import_error = False
+try:
+    import os
+    from jnpr.junos import Device
+    from jnpr.junos.factory import FactoryLoader
+except ImportError as err:
+    module_import_error = True
+    module_msg = 'Error importing required modules: %s' % str(err)
+
+######################################################################
+
+
+def main():
+
+    # define arguments from Ansible
+    module = AnsibleModule(
+        argument_spec=dict(
+            host=dict(required=True),
+            user=dict(required=False, default=os.getenv('USER')),
+            passwd=dict(required=False, default=None, no_log=True),
+            port=dict(required=False, type='int', default=830)
+            ),
+        supports_check_mode=False
+        )
+
+    # early exit if required modules failed to import
+    if module_import_error:
+        module.fail_json(msg=module_msg)
+
+    host = module.params['host']
+    username = module.params['user']
+    password = module.params['passwd']
+    ncport = module.params['port']
+
+    # define an operational table and view
+    table_view = {
+        'EthPortTerseTable': {
+            'rpc': 'get-interface-information',
+            'args': {
+                'terse': True,
+                'interface_name': '[fgxe][et]-*'
+            },
+            'item': 'physical-interface',
+            'args_key': 'interface_name',
+            'view': 'EthPortTerseView'
+        },
+        'EthPortTerseView': {
+            'fields': {
+                'admin': 'admin-status',
+                'oper': 'oper-status',
+                'units': './/logical-interface/name',
+                'name': 'name'
+            }
+        }
+    }
+
+    try:
+        dev = Device(host=host, gather_facts=False, user=username,
+                     passwd=password, port=ncport)
+        dev.open()
+    except Exception as err:
+        msg = 'Error opening device connection: %s' % str(err)
+        module.fail_json(msg=msg)
+
+    try:
+        fl = FactoryLoader()
+        eth_terse = fl.load(table_view)
+        eth_table = eth_terse['EthPortTerseTable'](dev)
+    except Exception as err:
+        msg = 'Error loading operational table: %s' % str(err)
+        module.fail_json(msg=msg)
+
+    try:
+        eth_table.get()
+    except Exception as err:
+        msg = 'Error getting interface data: %s' % str(err)
+        module.fail_json(msg=msg)
+
+    try:
+        dev.close()
+    except Exception as err:
+        msg = 'Error closing device connection: %s' % str(err)
+        module.fail_json(msg=msg)
+
+    used_interfaces = []
+    unused_interfaces = []
+    link_interfaces = []
+    no_link_interfaces = []
+
+    for eth_int in eth_table:
+        if eth_int['oper'] == 'up':
+            link_interfaces.append(eth_int['name'])
+        else:
+            no_link_interfaces.append(eth_int['name'])
+
+        if (eth_int['units'] is not None) or (eth_int['oper'] == 'up'):
+            used_interfaces.append(eth_int['name'])
+        else:
+            unused_interfaces.append(eth_int['name'])
+
+    result = {'unused': unused_interfaces,
+              'used': used_interfaces,
+              'link': link_interfaces,
+              'no_link': no_link_interfaces}
+    module.exit_json(changed=False, msg='Interface lists', interfaces=result)
+
+######################################################################
+
+
+if __name__ == '__main__':
+    main()
