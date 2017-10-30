@@ -1,0 +1,27 @@
+---
+infrastructure:
+  router_hostname: vmx1
+  router_lo0: '1.1.1.1/32'
+  router_mgmt_fxp0: '192.168.122.35'
+  uplinks:
+    - {interface: 'ge-0/0/0.0', address: '10.1.1.1/30', mpls: 'yes', ospf: 'yes', ldp: 'yes', rsvp: 'no'}
+    - {interface: 'ge-0/0/1.0', address: '10.1.1.5/30', mpls: 'yes', ospf: 'yes', ldp: 'yes', rsvp: 'no'}
+
+services:
+  l3vpn:
+    - service_name: 'VPNA'
+      service_type: 'vrf'
+      rt: '65000:100'
+      rd: '65000:100'
+      sites:
+        - {site_id: 'site1', description: 'VPNA Site 1', interface: 'ge-0/0/2.100', protocol: 'bgp', peer_as: '65001', address: '10.100.100.1/30', bgp_neighbor: '10.100.100.2'}
+        - {site_id: 'site2', description: 'VPNA Site 2', interface: 'ge-0/0/2.101', protocol: 'bgp', peer_as: '65001', address: '10.100.100.5/30', bgp_neighbor: '10.100.100.6'}
+        - {site_id: 'site3', description: 'VPNA Site 3', interface: 'ge-0/0/2.102', protocol: 'bgp', peer_as: '65001', address: '10.100.100.9/30', bgp_neighbor: '10.100.100.10'}
+    - service_name: 'VPNB'
+      service_type: 'vrf'
+      rt: '65000:200'
+      rd: '65000:200'
+      sites:
+        - {site_id: 'site1', description: 'VPNB Site 1', interface: 'ge-0/0/2.200', protocol: 'bgp', peer_as: '65001', address: '10.100.100.1/30', bgp_neighbor: '10.100.100.2'}
+        - {site_id: 'site2', description: 'VPNB Site 2', interface: 'ge-0/0/2.201', protocol: 'bgp', peer_as: '65001', address: '10.100.100.5/30', bgp_neighbor: '10.100.100.6'}
+        - {site_id: 'site3', description: 'VPNB Site 3', interface: 'ge-0/0/2.202', protocol: 'bgp', peer_as: '65001', address: '10.100.100.9/30', bgp_neighbor: '10.100.100.10'}

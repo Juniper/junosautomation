@@ -1,0 +1,42 @@
+routing-instances {
+    VPNA {
+        instance-type vrf;
+        interface ge-0/0/2.100;
+        interface ge-0/0/2.101;
+        interface ge-0/0/2.102;
+        route-distinguisher 65000:100;
+        vrf-target target:65000:100;
+        protocols {
+            bgp {
+                group CEs {
+                    type external;
+                    peer-as 65001;
+                    as-override;
+                    neighbor 10.100.100.2;
+                    neighbor 10.100.100.6;
+                    neighbor 10.100.100.10;
+                }
+            }
+        }
+    }
+    VPNB {
+        instance-type vrf;
+        interface ge-0/0/2.200;
+        interface ge-0/0/2.201;
+        interface ge-0/0/2.202;
+        route-distinguisher 65000:200;
+        vrf-target target:65000:200;
+        protocols {
+            bgp {
+                group CEs {
+                    type external;
+                    peer-as 65001;
+                    as-override;
+                    neighbor 10.100.100.2;
+                    neighbor 10.100.100.6;
+                    neighbor 10.100.100.10;
+                }
+            }
+        }
+    }
+}
