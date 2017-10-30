@@ -1,0 +1,4 @@
+junos-eznc==2.1.5
+yamlordereddictloader==0.1.1
+python-magic==0.4.13
+pathlib==1.0.1

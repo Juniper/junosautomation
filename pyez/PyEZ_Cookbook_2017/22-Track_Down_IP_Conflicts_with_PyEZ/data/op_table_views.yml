@@ -1,0 +1,133 @@
+---
+RouteTable:
+  rpc: get-route-information
+  args:
+    table: <my-main-table.inet.0>
+  args_key: destination
+  item: route-table/rt
+  key: rt-destination
+  view: RouteTableView
+
+RouteTableView:
+  groups:
+    nh: 'rt-entry[current-active]/nh[selected-next-hop]'
+  fields_nh:
+    via: via
+
+
+LogicalInterfaceTable:
+  rpc: get-interface-information
+  args:
+    detail: True
+    interface_name: '*'
+  args_key: interface_name
+  item: logical-interface
+  key: name
+  view: LogicalInterfaceView
+
+LogicalInterfaceView:
+  groups:
+    irb_domain: 'irb-domain'
+    lag: 'lag-traffic-statistics/lag-link'
+  fields_irb_domain:
+    bridge: irb-bridge
+    routing_instance: irb-routing-instance
+  fields_lag:
+    name: name
+
+
+BridgeTable:
+  rpc: get-bridge-mac-table
+  args:
+    address: '*'
+  args_key: address
+  item: l2ald-mac-entry
+  view: BridgeTableView
+
+# Older JUNOS MX
+# BridgeTableView:
+#   groups:
+#     mac: l2ald-mac-entry
+#   fields_mac:
+#     vlan: l2-bridge-vlan
+#     domain: l2-mac-bridging-domain
+#     interface: l2-mac-logical-interface
+
+BridgeTableView:
+  fields:
+    mac: l2-mac-address
+    interface: l2-mac-logical-interface
+    vlan_name: l2-mac-bridging-domain
+    vlan_id: l2-bridge-vlan
+  
+# QFX
+QFXEtherSwTable:
+  rpc: get-ethernet-switching-table-information
+  args:
+    vlan_id: '[\d+]'
+  item: l2ng-l2ald-mac-entry-vlan/l2ng-mac-entry
+  key: l2ng-l2-mac-address
+  view: QFXEtherSwView
+
+QFXEtherSwView:
+  fields:
+    mac: l2ng-l2-mac-address
+    vlan_name: l2ng-l2-mac-vlan-name
+    interface: l2ng-l2-mac-logical-interface
+
+
+
+EtherSwTable:
+  rpc: get-vlan-ethernet-switching-table
+  args:
+    vlan_name: "*"
+  item: ethernet-switching-table/mac-table-entry
+  key: mac-address
+  view: EtherSwView
+
+EtherSwView:
+  fields:
+    mac: mac-address
+    vlan_name: mac-vlan
+    interface: mac-interfaces-list/mac-interfaces
+
+
+LLDPTable:
+  rpc: get-lldp-neighbors-information
+  item: lldp-neighbor-information
+  key: lldp-local-interface | lldp-local-port-id
+  view: LLDPView
+
+LLDPView:
+  fields:
+    local_int: lldp-local-interface | lldp-local-port-id
+    local_parent: lldp-local-parent-interface-name
+    remote_type: lldp-remote-chassis-id-subtype
+    remote_chassis_id: lldp-remote-chassis-id
+    remote_port_desc: lldp-remote-port-description
+
+# For EX
+LLDPInterfaceNeighborEX:
+  rpc: get-lldp-interface-neighbors-information
+  args:
+    interface_name: '[afgxe]e*'
+  item: lldp-neighbor-information
+  key: lldp-local-interface
+  view: LLDPInterfaceNeighborView
+
+# For MX, QFX
+LLDPInterfaceNeighborMX:
+  rpc: get-lldp-interface-neighbors
+  args:
+    interface_device: '[afgx]e*'
+  item: lldp-neighbor-information
+  key: lldp-local-interface
+  view: LLDPInterfaceNeighborView
+
+LLDPInterfaceNeighborView:
+  fields:
+    local_int: lldp-local-interface
+    local_parent: lldp-local-parent-interface-name
+    remote_system_name: lldp-remote-system-name
+    remote_system_ip: lldp-remote-management-address
+    remote_system_description: lldp-system-description/lldp-remote-system-description

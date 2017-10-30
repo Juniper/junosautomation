@@ -1,0 +1,21 @@
+version: 1
+formatters:
+  simpleFormatter:
+    format: '%(asctime)s %(name)s %(lineno)d - %(levelname)s: %(message)s'
+    datefmt: '%Y/%m/%d %H:%M:%S'
+
+handlers:
+  default:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: simpleFormatter
+    stream: ext://sys.stdout
+  file:
+    class : logging.FileHandler
+    level: DEBUG
+    formatter: simpleFormatter
+    mode: w
+
+root:
+  level: DEBUG
+  handlers: [default, file]
