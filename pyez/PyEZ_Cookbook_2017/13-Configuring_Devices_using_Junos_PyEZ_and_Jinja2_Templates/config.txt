@@ -1,0 +1,6 @@
+set system name-server {{ dns_server }}
+set system ntp server {{ ntp_server }}
+set snmp location "{{ snmp_location }}"
+set snmp contact "{{ snmp_contact }}"
+set snmp community {{ snmp_community }} authorization read-write
+set snmp trap-group snmp-traps targets {{ snmp_trap_recvr }}
