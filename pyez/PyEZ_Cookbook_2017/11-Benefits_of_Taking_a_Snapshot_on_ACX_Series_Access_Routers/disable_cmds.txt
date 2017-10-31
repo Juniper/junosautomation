@@ -1,0 +1,4 @@
+deactivate system syslog
+delete protocols rsvp traceoptions 
+delete protocols ospf traceoptions
+delete protocols ldp traceoptions
