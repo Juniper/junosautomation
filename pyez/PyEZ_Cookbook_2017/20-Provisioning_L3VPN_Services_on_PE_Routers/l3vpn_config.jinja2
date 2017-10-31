@@ -1,0 +1,47 @@
+groups {
+    replace:
+    L3VPN-SCRIPT {
+        {% if VPN_data %}
+        interfaces {
+        {% for VPN_entry in VPN_data %}
+            {{ VPN_entry.interface_name }} {
+                unit {{ VPN_entry.unit }} {
+                    vlan-id {{ VPN_entry.vlan_id }};
+                    family inet {
+                        address {{ VPN_entry.ip_mask }};
+                    }
+                }
+            }
+        {% endfor %}
+        }
+        routing-instances {
+        {% for VPN_entry in VPN_data %}
+            {{ VPN_entry.customer_id }} {
+                instance-type vrf;
+                vrf-table-label;
+                interface {{ VPN_entry.interface_name }}.{{ VPN_entry.unit }};
+                vrf-target {{ customers[VPN_entry.customer_id].vrf_target }};
+                protocols {
+                    bgp {
+                        group EBGP-{{ VPN_entry.customer_id }} {
+                            family inet {
+                                unicast {
+                                    prefix-limit {
+                                        maximum {{ VPN_entry.prefix_limit }};
+                                        teardown;
+                                    }
+                                }
+                            }
+                            peer-as {{ customers[VPN_entry.customer_id].AS }};
+                            as-override;
+                            neighbor {{ VPN_entry.customer_ip }};
+                        }
+                    }
+                }
+            }
+        {% endfor %}
+        }
+        {% endif %}
+    }
+}
+apply-groups L3VPN-SCRIPT;

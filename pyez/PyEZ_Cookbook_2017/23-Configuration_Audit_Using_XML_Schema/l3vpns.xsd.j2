@@ -1,0 +1,100 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="instance">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="{{ template['service_name'] }}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="instance-type">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="{{ template['service_type'] }}"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="interface" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    {% for site in template['sites'] -%}
+                      <xs:enumeration value="{{ site['interface'] }}"/>
+                    {% endfor %}
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="route-distinguisher">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="rd-type">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="{{ template['rd'] }}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="vrf-target">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="community">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="target:{{ template['rt'] }}"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="protocols">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="bgp">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="group">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:string" name="name"/>
+                          <xs:element type="xs:string" name="type"/>
+                          <xs:element type="xs:int" name="peer-as"/>
+                          <xs:element type="xs:string" name="as-override"/>
+                          <xs:element name="neighbor" maxOccurs="unbounded" minOccurs="0">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="name">
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                    {% for site in template['sites'] -%}
+                                      <xs:enumeration value="{{ site['bgp_neighbor'] }}"/>
+                                    {% endfor %}
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

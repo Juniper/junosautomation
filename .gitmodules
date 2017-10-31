@@ -10,9 +10,6 @@
 [submodule "ansible/ansible-junos-examples"]
 	path = ansible/ansible-junos-examples
 	url = https://github.com/JNPRAutomate/ansible-junos-examples
-[submodule "jet/jet-app-store"]
-	path = jet/jet-app-store
-	url = https://github.com/Juniper/jet-app-store
 [submodule "slax/junoscriptorium"]
 	path = slax/junoscriptorium
 	url = https://github.com/Juniper/junoscriptorium
