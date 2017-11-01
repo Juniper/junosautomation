@@ -32,6 +32,7 @@ from pkgs.utils import ipconflictslib as ipc
 
 logger = get_logger(__name__)
 
+
 def create_help():
     """ Build help documentation and creates program arguments."""
     parser = argparse.ArgumentParser()
@@ -188,7 +189,8 @@ def main():
                     if not vendor:
                         logger.info("\t\t{} -> {} (MAC not found in search) ".format(mac, 'System name not found'))
                     else:
-                        logger.info("\t\t{}({}) -> {} (MAC not found in search) ".format(mac, vendor, 'System name not found'))
+                        logger.info("\t\t{}({}) -> {} (MAC not found in search) ".format(mac, vendor,
+                                                                                         'System name not found'))
                 else:
                     interface = data[4]
                     if not vendor:

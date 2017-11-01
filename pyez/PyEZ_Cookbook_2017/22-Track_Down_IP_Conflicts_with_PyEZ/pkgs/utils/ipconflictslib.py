@@ -276,7 +276,6 @@ class LogFile:
         else:
             raise UnsupportedError("Unsupported file type: {}".format(self.file_type))
 
-
     # Main function
     def create_seed_dict(self, dev):
         """Function that initiates the creation of IP/MAC mappings from the IP conflict log file.
@@ -300,7 +299,8 @@ class LogParsers:
     This code works for unstructure syslog only.
 
     Sample log output:
-    Jun 12 23:26:53  My-MX1 /kernel: KERN_ARP_ADDR_CHANGE: arp info overwritten for 192.168.1.10 from 00:11:7d:1f:0b:3e to 0c:c5:7a:52:d1:aa
+    Jun 12 23:26:53  My-MX1 /kernel: KERN_ARP_ADDR_CHANGE: arp info overwritten for 192.168.1.10 from 00:11:7d:1f:0b:3e
+     to 0c:c5:7a:52:d1:aa
     """
 
     @staticmethod
@@ -547,8 +547,8 @@ def search_remote_system(credentials, connect_timeout, system_data):
     Args:
         credentials (dict): Contains credential information along with the mode of requested authentication.
         connect_timeout (int): PyEZ connection timeout in seconds.
-        system_data (list): Contains a single tuple with system_ip and a system's value dictionary housing complete information about what
-                           has been found so far for a single device.
+        system_data (list): Contains a single tuple with system_ip and a system's value dictionary housing complete
+                            information about what has been found so far for a single device.
 
     Returns:
         mytuple (tuple): Tuple of _systems_dict (dict) and macs_found (list).
@@ -596,7 +596,7 @@ def search_remote_system(credentials, connect_timeout, system_data):
                                     new_interface = local_int
                                 else:
                                     old_interface = local_int
-                                # If you found a local interface via LLDP, attempt to see if there is a remote IP associated.
+                                # If you found a local interface via LLDP, see if there is a remote IP associated.
                                 r_ip, name, description = find_remote_system(dev, model=dev.facts.get('model'),
                                                                              local_int=local_int)
                                 # If you didn't find a remote IP in the LLDP table, this interface is a leaf
@@ -615,15 +615,18 @@ def search_remote_system(credentials, connect_timeout, system_data):
                                     # If we have not yet seen this MAC yet, add it to our existing data structure
                                     try:
                                         vlan_mac_list = _system_dict[r_ip]['vlans'][vlan]
-                                        vlan_mac_list.extend([mac for mac in my_ifaces_macs if mac not in vlan_mac_list])
+                                        vlan_mac_list.extend([mac for mac in my_ifaces_macs if mac not in
+                                                              vlan_mac_list])
                                     except KeyError:
                                         if old_interface == new_interface:
                                             _system_dict[r_ip]['vlans'][vlan] = []
                                             vlan_mac_list = _system_dict[r_ip]['vlans'][vlan]
-                                            vlan_mac_list.extend([mac for mac in my_ifaces_macs if mac not in vlan_mac_list])
+                                            vlan_mac_list.extend([mac for mac in my_ifaces_macs if mac not in
+                                                                  vlan_mac_list])
                                         else:
-                                            logger.error("Two distinct interfaces are connected from {} to {}. Potential mis-match access "
-                                                         "vlan and/or mis-cabling issue.".format(system_ip, r_ip))
+                                            logger.error("Two distinct interfaces are connected from {} to {}. "
+                                                         "Potential mis-match access vlan and/or mis-cabling issue."
+                                                         .format(system_ip, r_ip))
                                             logger.error("Check the following connections: {}:{}, {} <--> {}"
                                                          .format(system_ip, old_interface, new_interface, r_ip))
                                         continue
@@ -636,7 +639,7 @@ def search_remote_system(credentials, connect_timeout, system_data):
                 leaves[vlan].update(interfaces_to_macs)
             _system_dict[system_ip]['leaves'] = leaves
             _system_dict[system_ip]['searched'] = True
-    except:
+    except ConnectAuthError or ConnectError:
         # If you cannot login to the system, it is a leaf node.
         _system_dict[system_ip]['searched'] = True
     mytuple = (_system_dict, macs_found)
@@ -682,4 +685,3 @@ def system_scan(systems_dict, credentials, processes, connect_timeout=None):
         return system_scan(systems_dict, credentials, processes)
     else:
         return systems_dict, all_macs_found
-

@@ -39,6 +39,7 @@ except ImportError:
 # Vendor tuple
 Vendor = namedtuple('Vendor', ['manuf', 'comment'])
 
+
 class MacParser(object):
     """Class that contains a parser for Wireshark's OUI database.
 
@@ -59,7 +60,7 @@ class MacParser(object):
     """
     MANUF_URL = "https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf"
 
-    def  __init__(self, manuf_name="manuf", update=False):
+    def __init__(self, manuf_name="manuf", update=False):
         self._manuf_name = manuf_name
         if update:
             self.update()
@@ -248,6 +249,7 @@ class MacParser(object):
     def _bits_left(mac_str):
         return 48 - 4 * len(mac_str)
 
+
 def main():
     """Simple command line wrapping for MacParser."""
     argparser = argparse.ArgumentParser(description="Parser utility for Wireshark's OUI database.")
@@ -269,6 +271,7 @@ def main():
         print(parser.get_all(args.mac_address))
 
     sys.exit(0)
+
 
 if __name__ == "__main__":
     main()
