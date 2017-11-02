@@ -1,0 +1,15 @@
+---
+IfdescTable:
+  rpc: get-interface-information
+  args:
+    brief: True
+    interface_name: '[afgx]e*'
+  args_key: interface_name
+  item: physical-interface/logical-interface
+  view: IfdescView
+
+IfdescView:
+  fields:
+    name: name
+    vlan: link-address
+    description: description
