@@ -1,0 +1,13 @@
+---
+BridgeTable:
+    rpc: get - bridge - mac - table
+    item: l2ald - mac - entry
+    key: l2 - mac - address
+    view: BridgeView
+
+BridgeView:
+    fields:
+        vlan: l2 - bridge - vlan
+        mac: l2 - mac - address
+        interface: l2 - mac - logical - interface
+        domain: l2 - mac - bridging - domain
