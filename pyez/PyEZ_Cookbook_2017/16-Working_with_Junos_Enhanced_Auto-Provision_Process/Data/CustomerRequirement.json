@@ -1,0 +1,5 @@
+{"Products":[
+    {"mac":"aa:aa:aa:aa:aa:aa", "model":"EX2200", "junos":"12.8R12", "hostname": "EX2200-1"},
+    {"mac":"bb:bb:bb:bb:bb:bb", "model":"SRX320", "junos":"17.3", "hostname": "JEAP1"}
+]}
+

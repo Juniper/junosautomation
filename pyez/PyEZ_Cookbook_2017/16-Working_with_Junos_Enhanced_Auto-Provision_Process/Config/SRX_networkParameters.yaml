@@ -1,0 +1,18 @@
+---
+name_servers:
+  - 208.67.222.222;
+  - 208.67.220.220;
+
+interfaces:
+  - ge-0/0/1
+  - ge-0/0/2
+  - ge-0/0/3
+  - ge-0/0/4
+  - ge-0/0/5
+  - ge-0/0/6
+  - ge-0/0/7
+
+routing_options:
+  route: 0.0.0.0
+  prefix: 0
+  next_hop: 172.25.113.1

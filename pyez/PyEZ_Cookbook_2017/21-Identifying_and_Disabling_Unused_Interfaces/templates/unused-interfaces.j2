@@ -1,0 +1,21 @@
+#jinja2: lstrip_blocks: True
+interfaces {
+  {% if j_ints.interfaces.unused %}
+    /* administratively disable unused interfaces */
+    replace:
+    interface-range unused {
+        description "unused";
+        disable;
+        {% for interface in j_ints.interfaces.unused %}
+        member {{ interface }};
+        {% endfor %}
+    }
+  {% else %}
+    {# j_ints.interfaces.unused was empty or undefined, #}
+    {# so delete any existing interface-range unused #}
+    interface-range unused {
+        member {{ j_ints.interfaces.configured[0] }};
+    }
+    delete: interface-range unused;
+  {% endif %}
+}

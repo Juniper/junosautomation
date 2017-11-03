@@ -1,0 +1,74 @@
+---
+# Query a device to find out which Ethernet interfaces are unused
+# (have no link or logical interface) and disable those interfaces.
+
+- name: Disable unused Ethernet interfaces
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    config_dir: 'configs'
+    netconf_port: 830
+    template_dir: 'templates'
+
+  tasks:
+    - name: check netconf connectivity
+      wait_for:
+        host: "{{ ansible_host }}"
+        port: "{{ netconf_port }}"
+        timeout: 5
+
+    - name: get unused interfaces
+      junos_unused_interfaces:
+        host: "{{ ansible_host }}"
+        port: "{{ netconf_port }}"
+      register: j_ints
+
+    - name: display unused interfaces in verbose mode
+      debug:
+        var: j_ints
+        verbosity: 1
+
+    - name: confirm/create configs directory
+      file:
+        path: "{{ config_dir }}"
+        state: directory
+
+    - name: generate filename for config file
+      set_fact:
+        config_file: "{{ config_dir }}/unused-ints-{{ inventory_hostname }}.conf"
+
+    - name: generate configuration file
+      template:
+        src: "{{ template_dir }}/unused-interfaces.j2"
+        dest: "{{ config_file }}"
+
+    - name: push configuration change to device
+      junos_install_config:
+        host: "{{ ansible_host }}"
+        file: "{{ config_file }}"
+        port: "{{ netconf_port }}"
+        timeout: 120
+        comment: "playbook disable-unused-interfaces, commit confirmed 10"
+        confirm: 10
+        replace: true
+        overwrite: false
+      notify:
+        - confirm config commit
+
+    - name: delete configuration file
+      file:
+        path: "{{ config_file }}"
+        state: absent
+
+  handlers:
+    - name: confirm config commit
+      junos_commit:
+        host: "{{ ansible_host }}"
+        port: "{{ netconf_port }}"
+        timeout: 120
+        comment: "playbook disable-unused-interfaces, confirm previous commit"
