@@ -1,3 +1,5 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved
 #!/opt/local/bin/python
                                                                                 
 import lxml                                                                     
