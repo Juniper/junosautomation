@@ -1,3 +1,6 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved.
+
 from jnpr.junos import Device                    # (1)
 from jnpr.junos.utils.config import Config
 from jnpr.junos.exception import *
