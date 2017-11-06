@@ -1,3 +1,5 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved.
 # Same test using direct RPC call
 def check_ospf_full_adjacencies(dev, neighbor_count):
     full_count = 0
