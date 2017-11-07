@@ -13,9 +13,14 @@ Ebook editions are available on iTunes/iBooks or available for the Amazon Kindle
 
 What is PyEZ?  Useful links gleaned from the book.
 
-• Forums: [PyEZ Google Group](https://groups.google.com/forum/ - !forum/junos-python-ez)
+• Forums: [PyEZ Google Group](https://groups.google.com/forum/junos-python-ez)
+
 • Forums: [Juniper J-NET TechWiki](http://forums.juniper.net/t5/Automation/tkb-p/Automation_Scripting)
+
 • Forums: [StackOverflow PyEZ Tag](https://stackoverflow.com/questions/tagged/pyez)
+
 • Book: [Automating Junos Administration (specifically, Chapter 4)](http://shop.oreilly.com/product/0636920041498.do)
-• Website: [The TechLibrary’s PyEZ Documentation](https://www.juniper.net/documentation/en_US/junos-pyez/information-products/pathway-pages/junos-pyez-developerguide.html)
+
+• Website: [The TechLibrary’s PyEZ Documentation](https://www.juniper.net/documentation/en_US/junos-pyez/information-products/pathway-pages/junos-pyez-developerguide.html
+
 • Website: [PyEZ at ReadTheDocs](http://junos-pyez.readthedocs.io)
