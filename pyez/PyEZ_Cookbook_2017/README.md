@@ -21,6 +21,6 @@ What is PyEZ?  Useful links gleaned from the book.
 
 • Book: [Automating Junos Administration (specifically, Chapter 4)](http://shop.oreilly.com/product/0636920041498.do)
 
-• Website: [The TechLibrary’s PyEZ Documentation](https://www.juniper.net/documentation/en_US/junos-pyez/information-products/pathway-pages/junos-pyez-developerguide.html
+• Website: [The TechLibrary’s PyEZ Documentation](https://www.juniper.net/documentation/en_US/junos-pyez/information-products/pathway-pages/junos-pyez-developerguide.html)
 
 • Website: [PyEZ at ReadTheDocs](http://junos-pyez.readthedocs.io)
