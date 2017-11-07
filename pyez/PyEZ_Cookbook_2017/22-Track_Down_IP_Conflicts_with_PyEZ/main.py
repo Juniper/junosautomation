@@ -1,3 +1,6 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved
+
 '''
 Identify physical switch interfaces associated within an IP conflict.
 

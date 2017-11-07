@@ -1,3 +1,5 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved.
 #!/usr/bin/python3
 
 from tkinter import *                                      # (1)

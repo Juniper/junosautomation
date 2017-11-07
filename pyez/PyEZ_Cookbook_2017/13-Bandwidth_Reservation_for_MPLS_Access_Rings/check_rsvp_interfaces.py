@@ -1,3 +1,5 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved.
 #!/usr/bin/python
 
 # purpose is to check the rsvp interface reservation on an ACX device

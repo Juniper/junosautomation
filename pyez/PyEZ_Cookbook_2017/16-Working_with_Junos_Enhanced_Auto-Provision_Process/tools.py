@@ -1,3 +1,5 @@
+# Copyright 2017, Juniper Networks Pvt Ltd.
+# All rights reserved.
 import re
 import os
 import time
