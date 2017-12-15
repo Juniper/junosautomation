@@ -29,3 +29,4 @@ User's PyEZ examples for reference
   http://www.ansible.com/ansible-network-infrastructure                                     
   Speaker: [Adam Mills](https://twitter.com/riotgeneral)
 
+* [Automation building blocks with PyEZ](pyez_building_blocks/README.md)
