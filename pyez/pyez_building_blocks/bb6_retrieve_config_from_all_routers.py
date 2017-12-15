@@ -44,7 +44,7 @@ log.setLevel(logging.ERROR)
 #
 # Returns the the filename where the configuration was stored
 #
-def getConfigurationFromRouter(dev, rtName, format):
+def getConfigurationFromRouter(dev, rtName, config_format):
 
     log.debug("entered getConfigurationFromRouter")
     cnf = None
@@ -60,36 +60,36 @@ def getConfigurationFromRouter(dev, rtName, format):
         datets = str(now.year) + str(now.month) + str(now.day) + "_" + str(now.hour) + str(now.minute) + str(now.second)
         log.debug("timestamp set to " + str(datets))
 
-        if (format == "cnf"):
-            cnf = dev.cli("show configuration", warning=False)
+        if (config_format == "cnf"):
+            cnf = dev.rpc.get_config(options={'format': 'text'})
             FileName = rtName + "." + datets + ".cnf"
             log.debug("The configuration will be stored in filename as %s", FileName)
 
             # saving the configuration into a CNF file
             f = open(FileName, 'w+')
             f.write(cnf)
-            f.close
+            f.close()
             return FileName
 
-        elif (format == "set"):
-            cnf = dev.cli("show configuration | display set", warning=False)
+        elif (config_format == "set"):
+            cnf = dev.rpc.get_config(options={'format': 'set'})
             FileName = rtName + "." + datets + ".set"
             log.debug("The configuration will be stored in filename as %s", FileName)
             # saving the configuration into a SET file
             f = open(FileName, 'w+')
             f.write(cnf)
-            f.close
+            f.close()
             return FileName
 
         else: # defaults to XML
             cnf = dev.rpc.get_config()
             FileName = rtName + "." + datets + ".xml"
-            log.warn("The configuration will be stored in filename as %s", FileName)
+            log.debug("The configuration will be stored in filename as %s", FileName)
 
             # saving the configuration into a XML file
             f = open(FileName, 'w+')
             f.write(etree.tostring(cnf))
-            f.close
+            f.close()
             return FileName
 
     except Exception as e:

@@ -34,8 +34,8 @@ console.setFormatter(logging.Formatter(format_str))
 log.addHandler(console) # prints to console.
 
 # set the log level here
-#log.setLevel(logging.WARN) 
-log.setLevel(logging.ERROR) 
+#log.setLevel(logging.WARN)
+log.setLevel(logging.ERROR)
 
 
 #
@@ -43,14 +43,14 @@ log.setLevel(logging.ERROR)
 #
 # Returns the the filename where the configuration was stored
 #
-def getConfigurationFromRouter(userName, userPassword, router, format):
+def getConfigurationFromRouter(userName, userPassword, router, config_format):
 
     log.debug("entered getConfigurationFromRouter")
     cnf = None
     FileName = None
 
     try:
-        log.debug("host = %s, user = %s, password = %s, router = %s, format = %s", userName, userPassword, router, format)
+        log.debug("host = %s, user = %s, password = %s, router = %s, format = %s", userName, userPassword, router, config_format)
         dev = Device(host=router, user=userName, password=userPassword, gather_facts=False)
         dev.open()
 
@@ -65,36 +65,36 @@ def getConfigurationFromRouter(userName, userPassword, router, format):
         now = datetime.datetime.now()
         datets = str(now.year) + str(now.month) + str(now.day) + "_" + str(now.hour) + str(now.minute) + str(now.second)
 
-        if (format == "cnf"):
-            cnf = dev.cli("show configuration", warning=False)
+        if (config_format == "cnf"):
+            cnf = dev.rpc.get_config(options={'format': 'text'})
             FileName = router + "." + datets + ".cnf"
-            log.warn("The configuration will be stored in filename as %s", FileName)
+            log.debug("The configuration will be stored in filename as %s", FileName)
 
             # saving the configuration into a CNF file
             f = open(FileName, 'w+')
             f.write(cnf)
-            f.close
+            f.close()
             return FileName
 
-        elif (format == "set"):
-            cnf = dev.cli("show configuration | display set", warning=False)
+        elif (config_format == "set"):
+            cnf = dev.rpc.get_config(options={'format': 'set'})
             FileName = router + "." + datets + ".set"
-            log.warn("The configuration will be stored in filename as %s", FileName)
+            log.debug("The configuration will be stored in filename as %s", FileName)
             # saving the configuration into a SET file
             f = open(FileName, 'w+')
             f.write(cnf)
-            f.close
+            f.close()
             return FileName
 
         else: # defaults to XML
             cnf = dev.rpc.get_config()
             FileName = router + "." + datets + ".xml"
-            log.warn("The configuration will be stored in filename as %s", FileName)
+            log.debug("The configuration will be stored in filename as %s", FileName)
 
             # saving the configuration into a XML file
             f = open(FileName, 'w+')
             f.write(etree.tostring(cnf))
-            f.close
+            f.close()
             return FileName
 
     except Exception as e:
@@ -151,7 +151,7 @@ def main():
 
     rtInstance = None
 
-    log.warn("starting VPN inspection")
+    log.debug("starting VPN inspection")
 
     # walks through each configured routing-instance
     for rtInstance in xmlcfg.xpath("//configuration/routing-instances/instance"):

@@ -46,7 +46,7 @@ def connectToRouter(userName, userPassword, router):
         log.debug("user = %s, password = %s, router = %s", userName, userPassword, router)
         dev = Device(host=router, user=userName, password=userPassword, gather_facts=False)
         routerConnection = dev.open()
-        log.warn("established NETCONF session with the router %s", router)
+        log.debug("established NETCONF session with the router %s", router)
         return routerConnection
 
     except Exception as e:
@@ -63,11 +63,11 @@ def connectToRouter(userName, userPassword, router):
 #   - True if the router was provisioned
 #   - False if an error occurred
 #
-def provision(conn, junosConfig, format):
+def provision(conn, junosConfig, config_format):
 
 
     log.debug("entered provision")
-    log.debug("config mode set to %s", format)
+    log.debug("config mode set to %s", config_format)
     loadResult = None
 
     if (conn == None):
@@ -83,13 +83,13 @@ def provision(conn, junosConfig, format):
 
     try:
 
-        if (format == "xml"):
+        if (config_format == "xml"):
             loadResult = co.load(junosConfig, "xml")
 
-        elif (format == "text"):
+        elif (config_format == "text"):
             loadResult = co.load(junosConfig, "text")
 
-        elif (format == "set"):
+        elif (config_format == "set"):
             loadResult = co.load(junosConfig, "set")
 
         if (loadResult):

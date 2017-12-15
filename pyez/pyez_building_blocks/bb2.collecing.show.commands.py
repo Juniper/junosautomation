@@ -60,7 +60,7 @@ def connectToRouter(userName, userPassword, router):
 #
 # Returns the the filename where the configuration was stored
 #
-def getShowBgpSummary(conn, format):
+def getShowBgpSummary(conn, output_format):
 
     # dmontagner@pe1> show bgp summary | display xml rpc
     # <rpc-reply xmlns:junos="http://xml.juniper.net/junos/15.1F6/junos">
@@ -81,12 +81,12 @@ def getShowBgpSummary(conn, format):
         return None
 
     try:
-        log.debug("collecting the show bgp in format %s", format)
+        log.debug("collecting the show bgp in format %s", output_format)
         
-        if (format == "xml"):
+        if (output_format == "xml"):
             bgpOutput = conn.rpc.get_bgp_summary_information()
 
-        elif (format == "txt"):
+        elif (output_format == "txt"):
             bgpOutput = conn.rpc.get_bgp_summary_information({'format': 'text'})
 
         return bgpOutput
