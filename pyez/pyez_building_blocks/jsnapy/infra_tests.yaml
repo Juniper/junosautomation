@@ -1,0 +1,265 @@
+tests_include:
+  - check_interfaces
+  - check_RR1
+  - check_RR2
+  - check_ospf_uplinks
+  - check_ospf_interfaces
+  - check_ldp_neighbor
+  - check_ldp_interface
+  - check_rsvp_interface
+  - check_rsvp_neighbour
+  - check_mpls_interface
+  - check_mpls_lsp
+  
+# use '/' in your test cases apart from xpath if u want to search all elements irrespective of hierarchy, ex: in id if u use /name instead of name
+# then it will search in all the names in given xpath irrespective of their position
+# for simple, one test using command
+
+check_RR1:
+  - command: show bgp neighbor 172.20.0.0
+  - iterate:
+      xpath: //bgp-information/bgp-peer
+      id: ./peer-id, ./peer-as
+      tests:
+        - is-equal: peer-state, Established
+          err: "[ FAIL ] BGP session towards route-reflector <{{id_0}}> is DOWN"
+          info: "[ PASS ] BGP session towards route-reflector <{{id_0}}> is UP"
+        - no-diff: bgp-option-information/export-policy
+          err: "[ FAIL ] The export policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has changed from <{{pre['bgp-option-information/export-policy']}}> to <{{post['bgp-option-information/export-policy']}}>"
+          info: "[ PASS ] The export policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has not changed - <{{post['bgp-option-information/export-policy']}}>"
+        - no-diff: bgp-option-information/import-policy
+          err: "[ FAIL ] The import policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has changed from <{{pre['bgp-option-information/import-policy']}}> to <{{post['bgp-option-information/import-policy']}}>"
+          info: "[ PASS ] The import policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has not changed - <{{post['bgp-option-information/import-policy']}}>"
+        - no-diff: bgp-option-information/address-families
+          err: "[ FAIL ] The Address Families of the route-reflector <{{id_0}}> ASN <{{id_1}}> has changed from <{{pre['bgp-option-information/address-families']}}> to <{{post['bgp-option-information/address-families']}}>"
+          info: "[ PASS ] The Address Families of route-reflector <{{id_0}}> ASN <{{id_1}}> has not changed - <{{post['bgp-option-information/address-families']}}>"
+
+  - iterate:
+      xpath: //bgp-information/bgp-peer/bgp-rib
+      id: ../peer-id, ../peer-as, ./name
+      tests:
+        - no-diff: active-prefix-count
+          err: "[ FAIL ] The number of active prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['active-prefix-count']}}> to <{{post['active-prefix-count']}}>"
+          info: "[ PASS ] The number of active prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['active-prefix-count']}}>"
+        - no-diff: received-prefix-count
+          err: "[ FAIL ] The number of received prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['received-prefix-count']}}> to <{{post['received-prefix-count']}}>"
+          info: "[ PASS ] The number of received prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['received-prefix-count']}}>"
+        - no-diff: advertised-prefix-count
+          err: "[ FAIL ] The number of advertised prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['advertised-prefix-count']}}> to <{{post['advertised-prefix-count']}}>"
+          info: "[ PASS ] The number of advertised prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['advertised-prefix-count']}}>"
+        - no-diff: accepted-prefix-count
+          err: "[ FAIL ] The number of accepted prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['accepted-prefix-count']}}> to <{{post['accepted-prefix-count']}}>"
+          info: "[ PASS ] The number of accepted prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['accepted-prefix-count']}}>"
+        - no-diff: suppressed-prefix-count
+          err: "[ FAIL ] The number of suppressed prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['suppressed-prefix-count']}}> to <{{post['suppressed-prefix-count']}}>"
+          info: "[ PASS ] The number of suppressed prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['suppressed-prefix-count']}}>"
+
+check_RR2:
+  - command: show bgp neighbor 172.20.0.3
+  - iterate:
+      xpath: //bgp-information/bgp-peer
+      id: ./peer-id, ./peer-as
+      tests:
+        - is-equal: peer-state, Established
+          err: "[ FAIL ] BGP session towards route-reflector <{{id_0}}> is DOWN"
+          info: "[ PASS ] BGP session towards route-reflector <{{id_0}}> is UP"
+        - no-diff: bgp-option-information/export-policy
+          err: "[ FAIL ] The export policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has changed from <{{pre['bgp-option-information/export-policy']}}> to <{{post['bgp-option-information/export-policy']}}>"
+          info: "[ PASS ] The export policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has not changed - <{{post['bgp-option-information/export-policy']}}>"
+        - no-diff: bgp-option-information/import-policy
+          err: "[ FAIL ] The import policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has changed from <{{pre['bgp-option-information/import-policy']}}> to <{{post['bgp-option-information/import-policy']}}>"
+          info: "[ PASS ] The import policy(ies) of route-reflector <{{id_0}}> ASN <{{id_1}}> has not changed - <{{post['bgp-option-information/import-policy']}}>"
+        - no-diff: bgp-option-information/address-families
+          err: "[ FAIL ] The Address Families of the route-reflector <{{id_0}}> ASN <{{id_1}}> has changed from <{{pre['bgp-option-information/address-families']}}> to <{{post['bgp-option-information/address-families']}}>"
+          info: "[ PASS ] The Address Families of route-reflector <{{id_0}}> ASN <{{id_1}}> has not changed - <{{post['bgp-option-information/address-families']}}>"
+
+  - iterate:
+      xpath: //bgp-information/bgp-peer/bgp-rib
+      id: ../peer-id, ../peer-as, ./name
+      tests:
+        - no-diff: active-prefix-count
+          err: "[ FAIL ] The number of active prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['active-prefix-count']}}> to <{{post['active-prefix-count']}}>"
+          info: "[ PASS ] The number of active prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['active-prefix-count']}}>"
+        - no-diff: received-prefix-count
+          err: "[ FAIL ] The number of received prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['received-prefix-count']}}> to <{{post['received-prefix-count']}}>"
+          info: "[ PASS ] The number of received prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['received-prefix-count']}}>"
+        - no-diff: advertised-prefix-count
+          err: "[ FAIL ] The number of advertised prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['advertised-prefix-count']}}> to <{{post['advertised-prefix-count']}}>"
+          info: "[ PASS ] The number of advertised prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['advertised-prefix-count']}}>"
+        - no-diff: accepted-prefix-count
+          err: "[ FAIL ] The number of accepted prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['accepted-prefix-count']}}> to <{{post['accepted-prefix-count']}}>"
+          info: "[ PASS ] The number of accepted prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['accepted-prefix-count']}}>"
+        - no-diff: suppressed-prefix-count
+          err: "[ FAIL ] The number of suppressed prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has changed from <{{pre['suppressed-prefix-count']}}> to <{{post['suppressed-prefix-count']}}>"
+          info: "[ PASS ] The number of suppressed prefix for BGP peer <{{id_0}}> ASN <{{id_1}}> on table <{{id_2}}> has not changed - <{{post['suppressed-prefix-count']}}>"
+
+check_interfaces:
+  - command: show interface terse
+  - iterate:
+      xpath: physical-interface
+      id: ./name
+      tests:
+        - no-diff: admin-status
+          err: "[ FAIL ] The interface <{{id_0}}> state has changed from <{{pre['admin-state']}}> to <{{post['admin-state']}}>"
+          info: "[ PASS ] The interface <{{id_0}}> state has remained the same - <{{post['admin-state']}}>"
+
+        - list-not-less: name
+          err: "[ FAIL ] The post snapshot has less interfaces than the pre snapshot"
+          info: "[ PASS ] The pre and post snapshots have the same interfaces"
+
+        - list-not-more: name
+          err: "[ FAIL ] The post snapshot has additional interfaces than the pre snapshot"
+          info: "[ PASS ] The pre and post snapshots have the same interfaces"
+
+check_ospf_uplinks:
+  - command: show ospf neighbor
+  - iterate:
+      xpath: //ospf-neighbor-information/ospf-neighbor
+      id: ./neighbor-address, ./interface-name
+      tests:
+        - no-diff: ospf-neighbor-state
+          err: "[ FAIL ] The state of OSPF neighbor <{{id_0}}> on interface <{{ id_1 }}> has changed from <{{pre['ospf-neighbor-state']}}> to <{{post['ospf-neighbor-state']}}>"
+          info: "[ PASS ] The state of OSPF neighbor <{{id_0}}> on interface <{{ id_1 }}> has not changed"
+
+        - list-not-more: interface-name
+          err: "[ FAIL ] The OSPF neighbor <{{id_0}}> on interface <{{ id_1 }}> did not exist previously"
+          info: "[ PASS ] The number of OSPF neighbours remain the same"
+
+        - list-not-less: interface-name
+          err: "[ FAIL ] The OSPF neighbor <{{id_0}}> on interface <{{ id_1 }}> is gone"
+          info: "[ PASS ] The number of OSPF neighbours remain the same"
+
+check_ospf_interfaces:
+  - command: show ospf interface
+  - iterate:
+      xpath: //ospf-interface-information/ospf-interface
+      id: ./interface-name
+      tests:
+        - no-diff: ospf-area
+          err: "[ FAIL ] The OSPF area for interface <{{id_0}}> has changed from <{{pre['ospf-area']}}> to <{{post['ospf-area']}}>"
+          info: "[ PASS ] The OSPF area for all interfaces remain the same"
+
+check_ldp_neighbor:
+  - command: show ldp neighbor
+  - iterate:
+      xpath: //ldp-neighbor-information/ldp-neighbor
+      id: ./ldp-neighbor-address, ./interface-name
+      tests:
+        - no-diff: interface-name
+          err: "[ FAIL ] The LDP neighbor <{{id_0}}> for interface <{{id_1}}> has changed from <{{pre['interface-name']}}> to <{{post['interface-name']}}>"
+          info: "[ PASS ] The LDP neighbor for all interfaces remain the same"
+        
+        - list-not-less: interface-name
+          err: "[ FAIL ] The LDP neighbor <{{id_0}}> for interface <{{id_1}}> is missing"
+          info: "[ PASS ] The number of LDP neighbors remain the same"
+
+        - list-not-more: interface-name
+          err: "[ FAIL ] The LDP neighbor <{{id_0}}> for interface <{{id_1}}> did not exist previously"
+          info: "[ PASS ] The number of LDP neighbors remain the same"
+
+check_ldp_interface:
+  - command: show ldp interface
+  - iterate:
+      xpath: //ldp-interface-information/ldp-interface
+      id: ./interface-name
+      tests:
+        - no-diff: interface-name
+          err: "[ FAIL ] The LDP interface <{{id_0}}> has changed from <{{pre['interface-name']}}> to <{{post['interface-name']}}>"
+          info: "[ PASS ] The interfaces configured under LDP have not changed"
+        
+        - list-not-less: interface-name
+          err: "[ FAIL ] The LDP interface <{{id_0}}> is missing"
+          info: "[ PASS ] The number of LDP interfaces remain the same"
+
+        - list-not-more: interface-name
+          err: "[ FAIL ] The LDP interface <{{id_0}}> did not exist previously"
+          info: "[ PASS ] The number of LDP interfaces remain the same"
+
+check_rsvp_interface:
+  - command: show rsvp interface
+  - iterate:
+      xpath: //rsvp-interface-information/rsvp-interface
+      id: ./interface-name
+      tests:
+        - no-diff: rsvp-status
+          err: "[ FAIL ] The RSVP status for interface <{{id_0}}> has changed from <{{pre['rsvp-status']}}> to <{{post['rsvp-status']}}>"
+          info: "[ PASS ] The RSVP status for all interfaces remain the same"
+        
+        - list-not-less: rsvp-interface
+          err: "[ FAIL ] The RSVP interface <{{id_0}}> is missing"
+          info: "[ PASS ] The number of RSVP interfaces remain the same"
+
+        - list-not-more: rsvp-name
+          err: "[ FAIL ] The RSVP interface <{{id_0}}> did not exist previously"
+          info: "[ PASS ] The number of RSVP interfaces remain the same"
+
+check_rsvp_neighbour:
+  - command: show rsvp neighbor
+  - iterate:
+      xpath: //rsvp-neighbor-information/rsvp-neighbor
+      id: ./rsvp-neighbor-address
+      tests:
+        - no-diff: neighbor-up-count
+          err: "[ FAIL ] The RSVP neighbour count for RSVP neighbour <{{id_0}}> has changed from <{{pre['neighbor-up-count']}}> to <{{post['neighbor-up-count']}}>"
+          info: "[ PASS ] The RSVP neighbour count has not changed for neighbour <{{id_0}}>"
+        
+        - list-not-less: rsvp-neighbor-address
+          err: "[ FAIL ] The RSVP neighbour <{{id_0}}> is missing"
+          info: "[ PASS ] The number of RSVP neighbours remain the same"
+
+        - list-not-more: rsvp-neighbor-address
+          err: "[ FAIL ] The RSVP neighbour <{{id_0}}> did not exist previously"
+          info: "[ PASS ] The number of RSVP neighbours remain the same"
+
+check_mpls_interface:
+  - command: show mpls interface
+  - iterate:
+      xpath: //mpls-interface-information/mpls-interface
+      id: ./interface-name
+      tests:
+        - no-diff: mpls-interface-state
+          err: "[ FAIL ] The MPLS state for interface <{{id_0}}> has changed from <{{pre['mpls-interface-state']}}> to <{{post['mpls-interface-state']}}>"
+          info: "[ PASS ] The MPLS state for all interfaces remain the same"
+        
+        - list-not-less: interface-name
+          err: "[ FAIL ] The MPLS interface <{{id_0}}> is missing"
+          info: "[ PASS ] The number of MPLS interfaces remain the same"
+
+        - list-not-more: interface-name
+          err: "[ FAIL ] The MPLS interface <{{id_0}}> did not exist previously"
+          info: "[ PASS ] The number of MPLS interfaces remain the same"
+
+check_mpls_lsp:
+  - command: show mpls lsp
+  - iterate:
+      xpath: //mpls-lsp-information/rsvp-session-data/rsvp-session/mpls-lsp
+      id: ./name
+      tests:
+        - no-diff: lsp-state
+          err: "[ FAIL ] The state of MPLS LSP <{{id_0}}> has changed from <{{pre['lsp-state']}}> to <{{post['lsp-state']}}>"
+          info: "[ PASS ] The state of all MPLS LSPs remain the same"
+        
+        - list-not-less: name
+          err: "[ FAIL ] The MPLS LSP <{{id_0}}> is missing"
+          info: "[ PASS ] The number of MPLS LSPs remain the same"
+
+        - list-not-more: name
+          err: "[ FAIL ] The MPLS LSP <{{id_0}}> did not exist previously"
+          info: "[ PASS ] The number of MPLS LSPs remain the same"
+
+        - no-diff: destination-address
+          err: "[ FAIL ] The destination-address of MPLS LSP <{{id_0}}> has changed from <{{pre['destination-address']}}> to <{{post['destination-address']}}>"
+          info: "[ PASS ] The destination-address of all MPLS LSPs remain the same"
+
+        - no-diff: source-address
+          err: "[ FAIL ] The source-address of MPLS LSP <{{id_0}}> has changed from <{{pre['source-address']}}> to <{{post['source-address']}}>"
+          info: "[ PASS ] The source-address of all MPLS LSPs remain the same"
+
+        - no-diff: active-path
+          err: "[ FAIL ] The active-path of MPLS LSP <{{id_0}}> has changed from <{{pre['active-path']}}> to <{{post['active-path']}}>"
+          info: "[ PASS ] The active-path of all MPLS LSPs remain the same"
+
+        - exists: is-primary
+          err: "[ FAIL ] The MPLS LSP <{{id_0}}> is not using its primary path"
+          info: "[ PASS ] All MPLS LSPs are using their primary path"
+          

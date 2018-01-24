@@ -1,0 +1,6 @@
+# for multiple devices
+hosts:
+  - include: devices.yaml
+    group: VMX
+tests:
+  - infra_tests.yaml

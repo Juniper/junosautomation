@@ -1,0 +1,4 @@
+VMX:
+  - <your-router-IP-here>:
+      username: <your-username-here>
+      passwd: <your-password-here>
