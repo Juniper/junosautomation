@@ -1,0 +1,20 @@
+---
+- name: Show variables 4, localhost play
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: yes
+  tasks:
+    - name: construct timestamp
+      set_fact:
+        timestamp: "{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}"
+
+- name: Show variables 4, devices play
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: display localhost timestamp
+      debug:
+        var: hostvars.localhost.timestamp

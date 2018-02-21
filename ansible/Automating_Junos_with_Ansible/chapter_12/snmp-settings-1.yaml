@@ -1,0 +1,55 @@
+---
+- name: Generate and Install Configuration File
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+    - snmp
+  connection: local
+  gather_facts: no
+
+  vars:
+    config_assemble: "{{ user_data_path }}/config/{{ inventory_hostname }}"
+    config_assemble_build: "{{ config_assemble }}/build"
+    config_file: "{{ config_assemble }}/snmp.conf"
+    playbook_name: snmp_settings.yaml
+
+  pre_tasks:
+    - name: confirm or create device config directory
+      file:
+        path: "{{ config_assemble }}"
+        state: directory
+
+    - name: delete previous build directory
+      file:
+        path: "{{ config_assemble_build }}"
+        state: absent
+
+    - name: create build directory
+      file:
+        path: "{{ config_assemble_build }}"
+        state: directory
+
+  tasks:
+    - name: assemble config fragments
+      assemble:
+        src: "{{ config_assemble_build }}"
+        dest: "{{ config_file }}"
+      notify: install config onto device
+
+  handlers:
+    - name: install config onto device
+      junos_install_config:
+        host: "{{ ansible_host }}"
+        file: "{{ config_file }}"
+        timeout: 120
+        replace: yes
+        confirm: 10
+        comment: "playbook {{ playbook_name }}, commit confirmed"
+      notify: confirm commit
+
+    - name: confirm commit
+      junos_commit:
+        host: "{{ ansible_host }}"
+        timeout: 120
+        comment: "playbook {{ playbook_name }}, confirming previous commit"

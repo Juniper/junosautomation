@@ -1,0 +1,4 @@
+set system name-server 2.3.4.9
+set system name-server 2.3.4.8
+delete system name-server 1.2.3.4
+set system host-name vsrx-dns1

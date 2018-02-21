@@ -1,0 +1,17 @@
+---
+- name: common snmp settings
+  template:
+    src: snmp.j2
+    dest: "{{ config_assemble_build }}/snmp.conf"
+
+- name: firewall community
+  template:
+    src: community_fw.j2
+    dest: "{{ config_assemble_build }}/snmp_community_fw.conf"
+  when: ('srx' in group_names)
+
+- name: switch community
+  template:
+    src: community_sw.j2
+    dest: "{{ config_assemble_build }}/snmp_community_sw.conf"
+  when: ('ex' in group_names)

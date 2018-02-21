@@ -1,0 +1,10 @@
+#jinja2: lstrip_blocks: True
+snmp {
+    replace: community aja_sw {
+        authorization read-only;
+        clients {
+            192.168.2.200/32;
+            0.0.0.0/0 restrict;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+---
+- name: Get device uptime
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+
+  tasks:
+    - name: get uptime using ansible core module
+      junos_command:
+        commands:
+          - show system uptime
+        provider:
+          host: "{{ ansible_host }}"
+          port: 22
+          username: "{{ username }}"
+          password: "{{ password }}"
+      register: uptime
+
+    - name: display uptimes
+      debug: var=uptime

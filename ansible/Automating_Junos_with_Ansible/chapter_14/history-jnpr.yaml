@@ -1,0 +1,17 @@
+---
+- name: Get device commit history
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: get commit history using Juniper module
+      junos_rpc:
+        rpc: get-commit-information
+        format: xml
+        dest: "{{ inventory_hostname }}-history.txt"
+        host: "{{ ansible_host }}"
+        # user: deviceuser

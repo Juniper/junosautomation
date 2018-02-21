@@ -1,0 +1,28 @@
+---
+- name: Get LLDP neighbor and save for configuring interface descriptions
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    tmp_dir: "{{ user_data_path }}/tmp"
+    lldp_file: "{{ tmp_dir}}/{{ inventory_hostname }}-lldp.xml"
+
+  tasks:
+    - name: confirm or create configs directory
+      file:
+        path: "{{ tmp_dir }}"
+        state: directory
+
+    - name: get lldp neighbor table
+      junos_rpc:
+        rpc: get-lldp-neighbors-information
+        # rpc: get-lldp-interface-neighbors-information
+        format: xml
+        # kwargs:
+        #   interface_name: ge-0/1/0
+        host: "{{ ansible_host }}"
+        dest: "{{ lldp_file }}"

@@ -1,0 +1,3 @@
+---
+ansible_python_interpreter: /usr/local/bin/python
+user_data_path: /Users/sean/ansible

@@ -1,0 +1,4 @@
+- - - lightly formatted facts for {{ inventory_hostname }} - - -
+{% for fact_name,fact_data in junos_facts.facts.iteritems() %}
+    {{ fact_name }}: {{ fact_data }}
+{% endfor %}

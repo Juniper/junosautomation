@@ -1,0 +1,75 @@
+---
+- name: Set up report directory
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: generate report directory name
+      set_fact:
+        report_dir: "{{ user_data_path }}/reports"
+
+    - name: generate report build directory name
+      set_fact:
+        build_dir: "{{ report_dir }}/build"
+
+    - name: confirm/create report directory
+      file:
+        path: "{{ report_dir }}"
+        state: directory
+
+    - name: delete old report build directory
+      file:
+        path: "{{ build_dir }}"
+        state: absent
+
+    - name: confirm/create new report build directory
+      file:
+        path: "{{ build_dir }}"
+        state: directory
+
+- name: Get facts from Junos device
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: get device facts
+      junos_get_facts:
+        host: "{{ ansible_host }}"
+      register: junos_facts
+
+    - name: show device facts
+      debug:
+        var: junos_facts
+        verbosity: 1
+
+    - name: save device information using template
+      template:
+        src: template/device-facts-3.j2
+        dest: "{{ hostvars.localhost.build_dir }}/{{ inventory_hostname }}.txt"
+
+- name: Assemble device report
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+
+  vars:
+    systime: "{{ ansible_date_time.time | replace(':', '-') }}"
+    timestamp: "{{ ansible_date_time.date }}_{{ systime }}"
+    report_file: "{{ report_dir }}/device-facts_{{ timestamp }}.csv"
+
+  tasks:
+    - name: copy column headers file
+      copy:
+        src: template/_device-facts-columns.txt
+        dest: "{{ build_dir }}/"
+
+    - name: assemble device files into new report
+      assemble:
+        src: "{{ build_dir }}"
+        dest: "{{ report_file }}"

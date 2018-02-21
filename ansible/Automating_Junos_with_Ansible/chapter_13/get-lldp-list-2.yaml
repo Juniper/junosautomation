@@ -1,0 +1,47 @@
+---
+- name: Get LLDP neighbor and save for configuring interface descriptions
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    tmp_dir: "{{ user_data_path }}/tmp"
+    lldp_file: "{{ tmp_dir}}/{{ inventory_hostname }}-lldp.xml"
+    template_dir: "template"
+
+  tasks:
+    - name: confirm or create configs directory
+      file:
+        path: "{{ tmp_dir }}"
+        state: directory
+
+    - name: get lldp neighbor table
+      junos_rpc:
+        rpc: get-lldp-neighbors-information
+        format: xml
+        host: "{{ ansible_host }}"
+        dest: "{{ lldp_file }}"
+
+    - name: get neighbor details
+      xml:
+        path: "{{ lldp_file }}"
+        xpath: >
+          //lldp-neighbor-information[starts-with(lldp-local-interface, '{{ item }}')]/lldp-remote-system-name |
+          //lldp-neighbor-information[starts-with(lldp-local-interface, '{{ item }}')]/lldp-remote-port-description
+        content: text
+      with_items: "{{ aja_host.uplinks }}"
+      register: neighbors
+
+    - name: save interface descriptions, template 1
+      template:
+        src: "{{ template_dir }}/int-desc-1.j2"
+        dest: "{{ tmp_dir }}/{{ inventory_hostname }}-{{ item.item | replace('/', '-') }}.conf"
+      with_items: "{{ neighbors.results }}"
+
+    - name: save interface descriptions, template 2
+      template:
+        src: "{{ template_dir }}/int-desc-2.j2"
+        dest: "{{ tmp_dir }}/{{ inventory_hostname }}.conf"

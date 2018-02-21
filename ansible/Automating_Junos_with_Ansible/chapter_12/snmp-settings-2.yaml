@@ -1,0 +1,21 @@
+---
+- name: Generate and Install Configuration File
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+    - config_setup_commit
+    - snmp
+  connection: local
+  gather_facts: no
+
+  vars:
+    config_file: "{{ config_assemble }}/snmp.conf"
+    playbook_name: snmp_settings.yaml
+
+  tasks:
+    - name: assemble config fragments
+      assemble:
+        src: "{{ config_assemble_build }}"
+        dest: "{{ config_file }}"
+      notify: install config onto device

@@ -1,0 +1,2 @@
+{% set f=junos_facts.facts %}
+"{{ inventory_hostname }}","{{ f.version }}","{{ f.model }}","{{ f.switch_style }}","{{ f.serialnumber }}","{{ f.has_2RE }}","{{ f.master }}","{{ f.vc_capable }}","{{ f.vc_fabric }}","{{ f.vc_master }}","{{ f.vc_mode }}","{{ f.srx_cluster }}","{{ f.srx_cluster_id }}"

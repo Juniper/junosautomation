@@ -1,0 +1,14 @@
+---
+- name: Display variable from a vault
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: import vault data
+      include_vars: vault1.yml
+
+    - name: display variable
+      debug:
+        var: vault_test_1
