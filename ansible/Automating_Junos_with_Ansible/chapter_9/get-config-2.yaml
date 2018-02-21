@@ -1,0 +1,24 @@
+---
+- name: Backup Device Configuration
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    backup_dir: "{{ user_data_path }}/config_backups"
+    conf_file: "{{ backup_dir}}/{{ inventory_hostname }}.conf"
+
+  tasks:
+    - name: create backup directory if needed
+      file:
+        path: "{{ backup_dir }}"
+        state: directory
+
+    - name: get device configuration
+      junos_get_config:
+        host: "{{ ansible_host }}"
+        dest: "{{ conf_file }}"
+        format: text

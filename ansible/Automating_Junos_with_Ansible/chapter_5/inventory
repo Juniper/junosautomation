@@ -1,0 +1,5 @@
+vsrx1    ansible_host=192.0.2.10
+bilbo
+
+[all:vars]
+ansible_python_interpreter=/usr/local/bin/python

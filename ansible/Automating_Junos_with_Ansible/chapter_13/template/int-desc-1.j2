@@ -1,0 +1,15 @@
+#jinja2: lstrip_blocks: True
+{% set neighbor = {'name':'', 'desc':''} %}
+{% for match in item.matches %}
+  {% if match.has_key('lldp-remote-system-name') %}
+    {% if neighbor.update({'name': match['lldp-remote-system-name']}) %}{% endif %}
+  {% endif %}
+  {% if match.has_key('lldp-remote-port-description') %}
+    {% if neighbor.update({'desc': match['lldp-remote-port-description']}) %}{% endif %}
+  {% endif %}
+{% endfor %}
+interfaces {
+    {{ item.item }} {
+        description "to device {{ neighbor.name }} port {{ neighbor.desc }}";
+    }
+}

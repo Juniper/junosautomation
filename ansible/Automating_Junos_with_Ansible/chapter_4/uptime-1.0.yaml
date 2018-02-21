@@ -1,0 +1,12 @@
+---
+- name: Get device uptime
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - debug: var=inventory_hostname
+
+    - debug:
+        var: ansible_host

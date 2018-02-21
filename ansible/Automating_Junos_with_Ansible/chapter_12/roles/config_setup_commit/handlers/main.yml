@@ -1,0 +1,16 @@
+---
+- name: install config onto device
+  junos_install_config:
+    host: "{{ ansible_host }}"
+    file: "{{ config_file }}"
+    timeout: "{{ commit_timeout }}"
+    replace: yes
+    confirm: "{{ confirm_time }}"
+    comment: "playbook {{ playbook_name }}, commit confirmed {{ confirm_time }}"
+  notify: confirm commit
+
+- name: confirm commit
+  junos_commit:
+    host: "{{ ansible_host }}"
+    timeout: "{{ commit_timeout }}"
+    comment: "playbook {{ playbook_name }}, confirming previous commit"

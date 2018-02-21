@@ -1,0 +1,27 @@
+---
+- name: Generate and Install Configuration File
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+    - config_setup_commit
+    - system
+  connection: local
+  gather_facts: no
+
+  vars:
+    config_file: "{{ config_assemble }}/system.conf"
+    playbook_name: system_settings.yaml
+
+  pre_tasks:
+    - name: get device facts
+      junos_get_facts:
+        host: "{{ ansible_host }}"
+      register: jfact
+
+  tasks:
+    - name: assemble config fragments
+      assemble:
+        src: "{{ config_assemble_build }}"
+        dest: "{{ config_file }}"
+      notify: install config onto device

@@ -1,0 +1,17 @@
+[boston:children]
+bos_ex
+bos_srx
+
+[ex:children]
+bos_ex
+
+[srx:children]
+bos_srx
+
+[bos_ex]
+bilbo
+frodo
+sam
+
+[bos_srx]
+arwen

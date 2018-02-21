@@ -1,0 +1,50 @@
+#jinja2: lstrip_blocks: True
+system {
+    host-name {{ inventory_hostname }};
+    root-authentication {
+        encrypted-password "$5$AMMtq0mL$S45fRiFekBrs73M/RovN5jpax4GCGpYI2mGr1VfIkrC";
+    }
+    login {
+        user sean {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "$5$gGYLAk8H$RHk/T8Rjq7MSNnPHEey8jNJwnS28TEK/WUlknZnU4X5";
+            }
+        }
+    }
+    services {
+        ssh;
+        netconf {
+            ssh;
+        }
+    }
+}
+interfaces {
+    interface-range aja {
+        member ge-0/0/8;
+        member ge-0/0/9;
+        member ge-0/0/10;
+        member ge-0/0/11;
+        unit 0 {
+            family ethernet-switching {
+                port-mode access;
+                vlan {
+                    members aja;
+                }
+            }
+        }
+    }
+    vlan {
+        unit 0 {
+            family inet {
+                address {{ ansible_host }}/{{ netmask }};
+            }
+        }
+    }
+}
+vlans {
+    aja {
+        l3-interface vlan.0;
+    }
+}

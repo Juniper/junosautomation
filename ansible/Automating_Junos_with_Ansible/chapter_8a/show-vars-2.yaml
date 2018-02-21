@@ -1,0 +1,34 @@
+---
+- name: Show variables 2, first play
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+  tasks:
+    - debug: var=inventory_hostname
+    - debug: var=dns1
+
+    - name: get uptime using ansible core module
+      junos_rpc:
+        rpc: get-system-uptime-information
+        output: text
+        provider:
+          host: "{{ ansible_host }}"
+      register: uptime
+
+    - debug: var=uptime.output_lines
+
+    - set_fact: device_time={{ uptime['output_lines'][0] }}
+    - debug: var=device_time
+
+
+- name: Show variables 2, second play
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+  tasks:
+    - debug: var=inventory_hostname
+    - debug: var=dns1
+    - debug: var=uptime.output_lines
+    - debug: var=device_time

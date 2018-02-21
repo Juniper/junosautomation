@@ -1,0 +1,28 @@
+---
+- name: Show variables 1, first play
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  vars:
+    test1: "test all lower-case"
+    Test1: "Test first capital"
+    name_plus_host: "{{ inventory_hostname}} :: {{ ansible_host }}"
+
+  tasks:
+    - debug: var=test1
+    - debug: var=Test1
+    - debug: var=name_plus_host
+
+
+- name: Show variables 1, second play
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - debug: var=test1
+    - debug: var=Test1
+    - debug: var=name_plus_host

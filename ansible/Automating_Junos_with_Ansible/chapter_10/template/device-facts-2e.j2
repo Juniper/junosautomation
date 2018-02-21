@@ -1,0 +1,7 @@
+{% set f=junos_facts.facts %}
+"{{ inventory_hostname }}","{{ f.version }}","{{ f.model }}","{{ f.switch_style }}","{{ f.serialnumber }}","{{ f.has_2RE }}","{{ f.master }}","{{ f.vc_capable }}",
+{% if f.vc_fabric is none %}"-",{% else %}"{{ f.vc_fabric }}",{% endif %}
+{% if f.vc_master is none %}"-",{% else %}"{{ f.vc_master }}",{% endif %}
+{% if f.vc_mode is none %}"-",{% else %}"{{ f.vc_mode }}",{% endif %}
+{% if f.srx_cluster is none %}"-",{% else %}"{{ f.srx_cluster }}",{% endif %}
+{% if f.srx_cluster_id is none %}"-"{% else %}"{{ f.srx_cluster_id }}"{% endif %}

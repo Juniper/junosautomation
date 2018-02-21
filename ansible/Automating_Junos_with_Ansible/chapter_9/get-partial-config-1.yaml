@@ -1,0 +1,35 @@
+---
+- name: Prepare temp backup directory
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - set_fact: tmp_dir=tmp
+
+    - name: erase (old) backup directory (if it exists)
+      file:
+        path: "{{ tmp_dir }}"
+        state: absent
+
+    - name: create backup directory
+      file:
+        path: "{{ tmp_dir }}"
+        state: directory
+
+- name: Get partial device configurations
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: retrieve configuration and save to file
+      junos_get_config:
+        host: "{{ ansible_host }}"
+        dest: "{{ hostvars.localhost.tmp_dir }}/{{ inventory_hostname }}.conf"
+        format: "text"
+        filter: "system/ntp"

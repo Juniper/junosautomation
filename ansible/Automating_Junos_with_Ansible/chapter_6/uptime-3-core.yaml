@@ -1,0 +1,19 @@
+---
+- name: Get device uptime
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: get uptime using ansible core module
+      junos_rpc:
+        rpc: get-system-uptime-information
+        output: text
+        provider:
+          host: "{{ ansible_host }}"
+          # username: devicename
+      register: uptime
+
+    - name: display uptimes
+      debug: var=uptime.output_lines

@@ -1,0 +1,9 @@
+---
+ansible_host: 198.51.100.5
+aja_host:
+  dns_servers:
+    - 5.7.9.11
+    - 5.7.9.12
+    - 5.7.9.13
+  snmp_description: EX2200-C for testing
+  snmp_location: "Sean's home office"

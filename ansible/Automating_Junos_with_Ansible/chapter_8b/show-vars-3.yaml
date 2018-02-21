@@ -1,0 +1,11 @@
+---
+- name: Show variables 3
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: ansible variables
+      debug:
+        var: vars

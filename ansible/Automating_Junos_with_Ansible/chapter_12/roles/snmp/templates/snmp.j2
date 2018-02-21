@@ -1,0 +1,9 @@
+#jinja2: lstrip_blocks: True
+snmp {
+    description "{{ aja_host.snmp_description }}";
+    location "{{ aja_host.snmp_location }}";
+    contact "netadmin@aja.com";
+    {# the following lines ensure there will be no community public on a device #}
+    community public;
+    delete: community public;
+}

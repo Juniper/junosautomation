@@ -1,0 +1,14 @@
+---
+- name: Illustrating the find function
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    my_string: Hello World
+
+  tasks:
+    - debug: msg={{ my_string.find("World") }}
+
+    - debug: msg={{ my_string.find("Apple") }}
