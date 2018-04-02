@@ -1,4 +1,8 @@
-The text of *Automating Junos with Ansible* walks the reader through creating a number of example playbooks and their supporting files. Some of the playbooks are revised several times in a single chapter. Some of the playbooks are revised several times across several chapters.
+*Day One: Automating Junos with Ansible* is available as a free PDF on [Juniper J-Net](https://www.juniper.net/us/en/training/jnbooks/day-one/automation-series/automating-junos-ansible/); for eBooks get it on [Apple iBooks/iTunes](https://itunes.apple.com/us/book/day-one-automating-junos-with-ansible/id1351397873?mt=11) or on [Amazon for Kindle](https://www.amazon.com/Day-One-Automating-Junos®-Ansible-ebook/dp/B079YZDVYJ). For print books purchase at the [Day One Print Store](http://store.vervante.com/c/v/V4081804173.html).
+
+------------------------------------------------------------
+
+The text of *Day One: Automating Junos with Ansible* walks the reader through creating a number of example playbooks and their supporting files. Some of the playbooks are revised several times in a single chapter. Some of the playbooks are revised several times across several chapters.
 
 In order to maintain a "flow" the book does not ask the reader to save the revisions to the playbooks and supporting files using different, versioned names (for example, "save playbook-2.yaml as playbook-3.yaml"). Instead, the book assumes the reader will keep revising the files "in place." (This is also, in the author's experience, closer to how scripts and playbooks evolve in the real world.)
 
