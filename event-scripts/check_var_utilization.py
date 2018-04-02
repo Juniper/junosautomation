@@ -13,7 +13,7 @@ set event-options policy CHECK_VAR_POLICY events CHECK_VAR_EVENT
 set event-options event-script file check_var_utilization.py python-script-user <user-name>
 
 Then execute using:
-% logger -e check_var_event
+% logger -e CHECK_VAR_EVENT
 
 <user-name> who is executing the script, otherwise it will be run with user nobody permissions.
 """

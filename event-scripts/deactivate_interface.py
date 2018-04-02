@@ -14,7 +14,7 @@ set event-options policy DEACTIVATE_INTERFACE events DEACTIVATE_INTERFACE_EVENT
 set event-options event-script file deactivate_interface.py python-script-user <user-name>
 
 Then execute using:
-% logger -e deactivate_interface_event
+% logger -e DEACTIVATE_INTERFACE_EVENT 
 
 <user-name> who is executing the script, otherwise it will be run with user nobody permissions.
 """

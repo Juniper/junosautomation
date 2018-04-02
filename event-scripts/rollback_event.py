@@ -17,6 +17,7 @@ set event-options policy ROLLBACK_POLICY events ROLLBACK_EVENT
 set event-options policy ROLLBACK_POLICY then event-script rollback_event.py
 set event-options event-script file rollback_event.py python-script-user <user-name>
 
+logger -e ROLLBACK_EVENT
 <user-name> who is executing the script, otherwise it will be run with user nobody permissions.
 """
 

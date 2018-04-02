@@ -15,6 +15,7 @@ set event-options policy INPUT_POLICY events INPUT_EVENT
 set event-options policy INPUT_POLICY then event-script event_script_input.py
 set event-options event-script file event_script_input.py python-script-user <user-name>
 
+% logger -e INPUT_EVENT
 <user-name> who is executing the script, otherwise it will be run with user nobody permissions.
 """
 

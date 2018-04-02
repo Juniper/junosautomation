@@ -6,10 +6,6 @@
 #
 
 # Script to log syslog severity for an triggered event of a configured event policy
-# How to trigger ?
-#   $: logger -e DUMMY_EVENT "This is sample message"
-# Sample output:
-#   $: Jan 20 05:31:37  junos-device cscript: logger[57854]: This is sample message
 # Sample configuration:
 #  $# show event-options
 #      policy SYSLOG_SEVERITY {
@@ -33,6 +29,7 @@ set event-options policy SYSLOG_SEVERITY events SYSLOG_SEVERITY_EVENT
 set event-options policy SYSLOG_SEVERITY then event-script check_syslog_severity.py
 set event-options event-script file check_syslog_severity.py python-script-user <user-name>
 
+logger -e SYSLOG_SEVERITY_EVENT
 <user-name> who is executing the script, otherwise it will be run with user nobody permissions.
 """
 

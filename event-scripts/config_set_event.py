@@ -18,7 +18,7 @@ set event-options policy CONFIG_SET events CONFIG_SET_EVENT
 set event-options policy CONFIG_SET then event-script config_set_event.py
 set event-options event-script file config_set_event.py python-script-user <user-name>
 
-%logger -e config_set_event
+%logger -e CONFIG_SET_EVENT
 
 <user-name> who is executing the script, otherwise it will be run with user nobody permissions.
 """
@@ -30,8 +30,8 @@ from jnpr.junos.utils.config import Config
 dev = Device()
 dev.open()
 config_set = """
-set routing-options static route 10.3.0.0/16 next-hop 192.168.1.1
-set routing-options static route 10.3.0.0/16 next-hop 192.168.1.2
+set routing-options static route xx.xx.xx.xx/yy next-hop bb.bb.bb.bb
+set routing-options static route xx.xx.xx.xx/yy next-hop aa.aa.aa.aa
 """
 cu = Config(dev)
 cu.lock()
