@@ -1,5 +1,5 @@
 ---
-- name: Get LLDP neighbor and save for configuring interface descriptions
+- name: Get LLDP neighbor information
   hosts:
     - all
   roles:
@@ -8,30 +8,35 @@
   gather_facts: no
 
   vars:
-    tmp_dir: "{{ user_data_path }}/tmp"
-    lldp_file: "{{ tmp_dir}}/{{ inventory_hostname }}-lldp.xml"
+    connection_settings:
+      host: "{{ ansible_host }}"
 
   tasks:
-    - name: confirm or create configs directory
-      file:
-        path: "{{ tmp_dir }}"
-        state: directory
-
     - name: get lldp neighbor table
-      junos_rpc:
-        rpc: get-lldp-neighbors-information
+      juniper_junos_rpc:
+        provider: "{{ connection_settings }}"
+        rpcs: get-lldp-neighbors-information
         format: xml
-        host: "{{ ansible_host }}"
-        dest: "{{ lldp_file }}"
+      register: lldp
+
+    - name: display lldp neighbor results
+      debug:
+        var: lldp.stdout_lines
 
     - name: get neighbor details
       xml:
-        path: "{{ lldp_file }}"
+        xmlstring: "{{ lldp.stdout }}"
         xpath: >
           //lldp-neighbor-information[starts-with(lldp-local-interface, '{{ item }}')]/lldp-remote-system-name |
           //lldp-neighbor-information[starts-with(lldp-local-interface, '{{ item }}')]/lldp-remote-port-description
         content: text
-      with_items: "{{ aja_host.uplinks }}"
+      loop: "{{ aja2_host.uplinks }}"
       register: neighbors
 
-    - debug: var=neighbors
+    - name: show neighbor results
+      debug:
+        var: neighbors
+      #   msg: "{{ item.matches }}"
+      # loop: "{{ neighbors.results }}"
+      # loop_control:
+      #   label: "{{ item.item }}"

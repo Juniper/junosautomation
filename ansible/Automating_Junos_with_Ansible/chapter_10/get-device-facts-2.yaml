@@ -1,20 +1,4 @@
 ---
-- name: Set up report directory
-  hosts:
-    - localhost
-  connection: local
-  gather_facts: no
-
-  tasks:
-    - name: generate report directory name
-      set_fact:
-        report_dir: "{{ user_data_path }}/reports"
-
-    - name: confirm/create report directory
-      file:
-        path: "{{ report_dir }}"
-        state: directory
-
 - name: Get facts from Junos device
   hosts:
     - all
@@ -23,18 +7,19 @@
   connection: local
   gather_facts: no
 
+  vars:
+    connection_settings:
+      host: "{{ ansible_host }}"
+
   tasks:
     - name: get device facts
-      junos_get_facts:
-        host: "{{ ansible_host }}"
-      register: junos_facts
+      juniper_junos_facts:
+        provider: "{{ connection_settings }}"
 
-    - name: show device facts
+    - name: show Junos version
       debug:
-        var: junos_facts
-        verbosity: 1
+        var: junos.version
 
-    - name: save device information using template
-      template:
-        src: template/device-facts-2f.j2
-        dest: "{{ hostvars.localhost.report_dir }}/{{ inventory_hostname }}.txt"
+    - name: show device uptime
+      debug:
+        var: junos.RE0.up_time

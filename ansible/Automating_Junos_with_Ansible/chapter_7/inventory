@@ -1,5 +1,5 @@
-vsrx1    ansible_host=192.0.2.10     dns1=5.6.7.8    dns2=5.6.7.9
-bilbo    ansible_host=198.51.100.5   dns1=5.7.9.11   dns2=5.7.9.12
+aragorn    ansible_host=192.0.2.10     dns1=8.8.8.8    dns2=198.51.100.100
+bilbo      ansible_host=198.51.100.5   dns1=8.8.4.4    dns2=198.51.100.101
 
 [all:vars]
 ansible_python_interpreter=/usr/local/bin/python

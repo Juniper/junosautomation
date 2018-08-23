@@ -1,0 +1,11 @@
+---
+- name: Show group names
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: group names
+      debug:
+        var: group_names

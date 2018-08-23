@@ -1,0 +1,21 @@
+---
+- name: Experiment with Ansible's xml module
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: xpath
+      xml:
+        path: bilbo_get-interface-information.xml
+        xpath: //logical-interface[starts-with(name, 'ge-') or starts-with(name, 'vlan') or starts-with(name, 'irb')]/address-family[address-family-name='inet']/interface-address/ifa-local
+        content: text
+      register: interface_info
+
+    - name: show xpath results
+      debug:
+        var: interface_info
+
+
+          # //logical-interface/address-family[address-family-name='inet']/../name

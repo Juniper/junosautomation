@@ -1,5 +1,5 @@
 ---
-- name: Backup Device Configuration
+- name: Save configurations from Junos devices to files
   hosts:
     - all
   roles:
@@ -8,17 +8,28 @@
   gather_facts: no
 
   vars:
-    backup_dir: "{{ user_data_path }}/config_backups"
-    conf_file: "{{ backup_dir}}/{{ inventory_hostname }}.conf"
+    config_dir: "{{ user_data_path }}/config_backups"
+    config_filename: "{{ config_dir }}/{{ inventory_hostname }}.conf"
+    connection_settings:
+      host: "{{ ansible_host }}"
 
   tasks:
-    - name: create backup directory if needed
-      file:
-        path: "{{ backup_dir }}"
-        state: directory
+    - debug:
+        var: user_data_path
 
-    - name: get device configuration
-      junos_get_config:
-        host: "{{ ansible_host }}"
-        dest: "{{ conf_file }}"
+    - debug:
+        var: config_dir
+
+    - name: confirm/create device configuration directory
+      file:
+        path: "{{ config_dir }}"
+        state: directory
+      run_once: yes
+      delegate_to: localhost
+
+    - name: save device configuration
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        dest: "{{ config_filename }}"
         format: text
+        retrieve: committed

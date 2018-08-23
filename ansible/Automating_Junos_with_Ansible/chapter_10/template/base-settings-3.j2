@@ -1,15 +1,14 @@
 #jinja2: lstrip_blocks: True
-{# copy device facts into shorter variable names and lower-case the data #}
-{% set model = jfact.facts.model.lower() %}
-{% set personality = jfact.facts.personality|lower %}
+{% set model = junos.model.lower() %}
+{% set personality = junos.personality | lower %}
 
 {#- Determine SSH connection-limit and rate-limit based on device facts #}
 {% if model == 'vsrx' %}
-  {% set max_ssh = 5 %}
+    {% set max_ssh = 5 %}
 {% elif personality == 'srx_branch' %}
-  {% set max_ssh = 3 %}
+    {% set max_ssh = 3 %}
 {% else %}
-  {% set max_ssh = 10 %}
+    {% set max_ssh = 10 %}
 {% endif %}
 
 {#- Generate basic settings for the device #}
@@ -20,18 +19,17 @@ system {
             uid 2000;
             class super-user;
             authentication {
-                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNHawZMgHWTQ+uNKIt4l6I7eZdGgeXPHHx8KQxsOboAlbKuRPHItGITmXbPKOVTXoiYjdkH1LGGBLNcMNJ9pA8skjjOgGfa1VrvtzNp6/1+YY8iRXsSvPN6ZuQgthITUpg1qFNRRFIrP1ygSxhFBPY+ULmgdt5YzPs5k4G0MnMD5JavffVsEeUzB/HTtT+orT7baf/w4yLi0s0hX6oQL1ycFa9NmU7wZl1qLPzPH8bxusUEYUL/RagSAoK3AAATwobLqggDpCgpYr+POlxdYVSf9uI0xE7X2G4bpESFchvyEAXw0eYNHjxG5QXEGimctF/9MOE8gjniIJeUsUJzS8b sean@mbp15.local";
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxgT8ga1uYbS3bxXPPv7aEiTvSwXnK/7xu3NB0+t1njMBuUcgwn7zwtnayQyLS+ef3rNP7WZXwFYxUeFbVwdkLUn9/xvDM5Qi2m/6WRP/yrTRtEvNP4lUsZRH+IXQc59JOKfYqGkvbgfshnmtHJHYVOn/1E/w0cNDYg4oH6KbcqYb+isbKhdiqpDBvLsF9h0GwhaiLk2BpVutw2BZoeKN9vrF+OmcaB0WVzGvwblSHDpXdLfMJuHAyEhZImNSv4bXNAYFGht9zpdTwudP5qfwJo5304Sn62UaOzVN2zGogXKzxgxgAjeJ87io0Graiwo5q9kZYksjXvPzOaX3gt8Uv sean@mbp15.local";
             }
         }
     }
     replace:
     name-server {
-      {% for server in aja_host.dns_servers %}
+      {% for server in aja2_host.dns_servers %}
         {{ server }};
       {% endfor %}
     }
     services {
-        ftp;
         delete: ftp;
         netconf {
             ssh {
@@ -43,21 +41,17 @@ system {
             connection-limit {{ max_ssh }};
             rate-limit {{ max_ssh }};
         }
-        telnet;
         delete: telnet;
-        web-management {
-            http;
-        }
         delete: web-management;
     }
     replace:
     ntp {
-      {% for ntp in aja_site.ntp_servers %}
+      {% for ntp in aja2_site.ntp_servers %}
         server {{ ntp }};
       {% endfor %}
     }
 }
 snmp {
-    description "{{ aja_host.snmp_description }}";
-    location "{{ aja_host.snmp_location }}";
+    description "{{ aja2_host.snmp.description}}"
+    location "{{ aja2_host.snmp.location}}"
 }

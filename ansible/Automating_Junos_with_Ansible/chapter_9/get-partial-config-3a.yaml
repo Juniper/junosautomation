@@ -1,0 +1,42 @@
+---
+- name: Save partial configurations from Junos devices
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    config_dir: "{{ user_data_path }}/tmp"
+    config_filename: "{{ config_dir }}/{{ inventory_hostname }}.conf"
+    connection_settings:
+      host: "{{ ansible_host }}"
+
+  tasks:
+    - name: erase old backup directory if it exists
+      file:
+        path: "{{ config_dir }}"
+        state: absent
+      run_once: yes
+      delegate_to: localhost
+
+    - name: create backup directory
+      file:
+        path: "{{ config_dir }}"
+        state: directory
+      run_once: yes
+      delegate_to: localhost
+
+    - name: show filter setting from extra-vars command-line argument
+      debug:
+        var: filter | mandatory
+      run_once: yes
+
+    - name: save device configuration
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        dest: "{{ config_filename }}"
+        format: text
+        retrieve: committed
+        filter: "{{ filter | mandatory }}"

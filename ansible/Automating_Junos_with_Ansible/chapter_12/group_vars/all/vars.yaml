@@ -1,5 +1,5 @@
 ---
 ansible_python_interpreter: /usr/local/bin/python
-user_data_path: /Users/sean/ansible
+user_data_path: "{{ '~/ansible' | expanduser }}"
 root_hash: "{{ vault_root_hash }}"
 monitor_hash: "{{ vault_monitor_hash }}"

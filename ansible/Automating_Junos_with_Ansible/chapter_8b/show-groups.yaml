@@ -1,0 +1,11 @@
+---
+- name: Show groups
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: ansible variables
+      debug:
+        var: vars.groups

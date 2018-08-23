@@ -1,0 +1,10 @@
+---
+ansible_host: 192.0.2.10
+aja2_host:
+  dns_servers:
+    - 8.8.4.4
+    - 8.8.8.8
+    - 198.51.100.100
+  snmp:
+    description: virtual SRX for testing
+    location: Sean's Macbook Pro

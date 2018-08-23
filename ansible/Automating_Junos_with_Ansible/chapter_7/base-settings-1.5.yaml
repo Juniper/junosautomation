@@ -1,0 +1,72 @@
+---
+- name: Generate and Install Configuration File
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    tmp_dir: "tmp"
+    conf_file: "{{ tmp_dir}}/{{ inventory_hostname }}.conf"
+    connection_settings:
+      host: "{{ ansible_host }}"
+      user: "{{ username }}"
+      passwd: "{{ password }}"
+      port: 22
+      timeout: 120
+
+  # vars_prompt:
+  #   - name: username
+  #     prompt: Junos Username
+  #     private: no
+  #
+  #   - name: password
+  #     prompt: Junos Password
+  #     private: yes
+
+  tasks:
+    - name: confirm or create configs directory
+      file:
+        path: "{{ tmp_dir }}"
+        state: directory
+      run_once: yes
+
+    - name: save device information using template
+      template:
+        src: template/base-settings.j2
+        dest: "{{ conf_file }}"
+
+    - fail:
+        msg: "early exit for template troubleshooting"
+
+    - name: install generated configuration file onto device
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        src: "{{ conf_file }}"
+        load: replace
+        comment: "playbook base-settings.yaml, commit confirmed"
+        confirmed: 5
+        diff: yes
+        ignore_warning: yes
+      register: config_results
+      notify: confirm previous commit
+
+    - name: show configuration change
+      debug:
+        var: config_results.diff_lines
+      when: config_results.diff_lines is defined
+
+    - name: delete generated configuration file
+      file:
+        path: "{{ conf_file }}"
+        state: absent
+
+  handlers:
+    - name: confirm previous commit
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        comment: "playbook base-settings.yaml, confirming previous commit"
+        commit: yes
+        diff: no

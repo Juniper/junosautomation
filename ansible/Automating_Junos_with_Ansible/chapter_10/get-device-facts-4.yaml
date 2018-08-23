@@ -1,0 +1,38 @@
+---
+- name: Get facts from Junos device and save as CSV file
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    facts_dir: "{{ user_data_path }}/facts"
+    facts_build_dir: "{{ user_data_path }}/facts/build"
+    connection_settings:
+      host: "{{ ansible_host }}"
+
+  tasks:
+    - name: confirm/create report directory
+      file:
+        path: "{{ facts_dir }}"
+        state: directory
+      run_once: yes
+      delegate_to: localhost
+
+    - name: confirm/create build directory
+      file:
+        path: "{{ facts_build_dir }}"
+        state: directory
+      run_once: yes
+      delegate_to: localhost
+
+    - name: get device facts
+      juniper_junos_facts:
+        provider: "{{ connection_settings }}"
+
+    - name: save device facts
+      template:
+        src: template/device-facts-4a.j2
+        dest: "{{ facts_build_dir }}/{{ inventory_hostname }}.txt"

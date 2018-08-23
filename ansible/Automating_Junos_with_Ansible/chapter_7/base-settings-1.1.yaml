@@ -25,19 +25,21 @@
       file:
         path: "{{ tmp_dir }}"
         state: directory
+      run_once: yes
 
     - name: save device information using template
       template:
-        src: template/base-settings-1.1.j2
+        src: template/base-settings.j2
         dest: "{{ conf_file }}"
 
     - name: install generated configuration file onto device
-      junos_install_config:
-        host: "{{ ansible_host }}"
-        user: "{{ username }}"
-        passwd: "{{ password }}"
-        port: 22
-        file: "{{ conf_file }}"
-        timeout: 120
-        replace: yes
+      juniper_junos_config:
+        provider:
+          host: "{{ ansible_host }}"
+          user: "{{ username }}"
+          passwd: "{{ password }}"
+          port: 22
+          timeout: 120
+        src: "{{ conf_file }}"
+        load: replace
         comment: "playbook base-settings.yaml"

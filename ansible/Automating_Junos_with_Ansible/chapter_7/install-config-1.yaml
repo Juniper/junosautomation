@@ -1,0 +1,17 @@
+---
+- name: Install Configuration File
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: install configuration file onto device
+      juniper_junos_config:
+        provider:
+          host: "{{ ansible_host }}"
+          timeout: 120
+        load: merge
+        src: "config/nameserver.conf"

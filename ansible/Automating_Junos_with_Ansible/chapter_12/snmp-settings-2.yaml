@@ -11,7 +11,7 @@
 
   vars:
     config_file: "{{ config_assemble }}/snmp.conf"
-    playbook_name: snmp_settings.yaml
+    playbook_name: snmp-settings.yaml
 
   tasks:
     - name: assemble config fragments

@@ -11,13 +11,12 @@
 
   vars:
     config_file: "{{ config_assemble }}/system.conf"
-    playbook_name: system_settings.yaml
+    playbook_name: system-settings.yaml
 
   pre_tasks:
     - name: get device facts
-      junos_get_facts:
-        host: "{{ ansible_host }}"
-      register: jfact
+      juniper_junos_facts:
+        provider: "{{ connection_settings }}"
 
   tasks:
     - name: assemble config fragments

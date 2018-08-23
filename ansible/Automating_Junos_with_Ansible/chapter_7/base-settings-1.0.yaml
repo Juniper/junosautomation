@@ -23,5 +23,5 @@
 
     - name: save device information using template
       template:
-        src: template/base-settings-1a.j2
+        src: template/base-settings.j2
         dest: "{{ conf_file }}"

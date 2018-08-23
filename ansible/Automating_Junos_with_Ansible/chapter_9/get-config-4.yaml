@@ -1,0 +1,38 @@
+---
+- name: Save configurations from Junos devices to files
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    systime: "{{ ansible_date_time.time | replace(':', '-') }}"
+    timestamp: "{{ ansible_date_time.date }}_{{ systime }}"
+    config_dir: "{{ user_data_path }}/config_backups/{{ inventory_hostname }}"
+    config_filename: "{{ config_dir }}/{{ inventory_hostname }}_{{ timestamp }}.conf"
+    connection_settings:
+      host: "{{ ansible_host }}"
+
+  tasks:
+    - name: get localhost environment info (for date and time)
+      setup:
+      run_once: yes
+      delegate_to: localhost
+
+    - name: confirm/create device configuration directory
+      file:
+        path: "{{ config_dir }}"
+        state: directory
+
+    - name: save device configuration
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        dest: "{{ config_filename }}"
+        format: text
+        retrieve: committed
+
+    - name: display path to latest backup file
+      debug:
+        msg: "The configuration backup is in {{ config_filename }}"

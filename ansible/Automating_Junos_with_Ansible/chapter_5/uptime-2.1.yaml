@@ -18,15 +18,20 @@
 
   tasks:
     - name: get uptime using galaxy module
-      junos_rpc:
-        rpc: get-system-uptime-information
-        format: xml
-        dest: "{{ inventory_hostname }}-uptime.xml"
-        host: "{{ ansible_host }}"
-        port: 830
-        user: "{{ username }}"
-        passwd: "{{ password }}"
+      juniper_junos_rpc:
+        rpcs:
+          - get-system-uptime-information
+        provider:
+          host: "{{ ansible_host }}"
+          port: 22
+          user: "{{ username }}"
+          passwd: "{{ password }}"
       register: uptime
 
-    - name: display uptimes
-      debug: var=uptime
+    - name: display uptimes (single-RE)
+      debug:
+        var: uptime.parsed_output['system-uptime-information']['system-booted-time']
+
+    - name: display uptimes (multi-RE)
+      debug:
+        var: uptime.parsed_output['multi-routing-engine-results']['multi-routing-engine-item']['system-uptime-information']['system-booted-time']

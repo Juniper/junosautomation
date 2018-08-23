@@ -1,5 +1,8 @@
 ---
-config_assemble: "{{ user_data_path }}/config/{{ inventory_hostname }}"
-config_assemble_build: "{{ config_assemble }}/build"
 commit_timeout: 120
 confirm_time: 10
+config_assemble: "{{ user_data_path }}/config/{{ inventory_hostname }}"
+config_assemble_build: "{{ config_assemble }}/build"
+connection_settings:
+  host: "{{ ansible_host }}"
+  timeout: "{{ commit_timeout }}"

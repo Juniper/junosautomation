@@ -1,5 +1,5 @@
 ---
-- name: Prepare timestamp
+- name: Create timestamp for filenames
   hosts:
     - localhost
   connection: local
@@ -9,14 +9,17 @@
     systime: "{{ ansible_date_time.time | replace(':', '-') }}"
 
   tasks:
-    - debug: var=ansible_date_time.time
-    - debug: var=systime
+    - debug:
+        var: ansible_date_time.time
 
-    - name: get system date and time
+    - debug:
+        var: systime
+
+    - name: save timestamp in a variable for later use
       set_fact:
         timestamp: "{{ ansible_date_time.date }}_{{ systime }}"
 
-- name: Backup Device Configuration
+- name: Save configurations from Junos devices to files
   hosts:
     - all
   roles:
@@ -25,27 +28,24 @@
   gather_facts: no
 
   vars:
-    backup_dir: "{{ user_data_path }}/config_backups/{{ inventory_hostname }}"
-    temp_conf_file: "{{ backup_dir}}/{{ inventory_hostname }}"
-    conf_file: "{{ temp_conf_file }}_{{ hostvars.localhost.timestamp }}.conf"
+    config_dir: "{{ user_data_path }}/config_backups/{{ inventory_hostname }}"
+    config_filename: "{{ config_dir }}/{{ inventory_hostname }}_{{ hostvars.localhost.timestamp }}.conf"
+    connection_settings:
+      host: "{{ ansible_host }}"
 
   tasks:
-    - name: create backup directory if needed
+    - name: confirm/create device configuration directory
       file:
-        path: "{{ backup_dir }}"
+        path: "{{ config_dir }}"
         state: directory
 
-    - name: save device configuration in temporary file
-      junos_get_config:
-        host: "{{ ansible_host }}"
-        dest: "{{ temp_conf_file }}"
+    - name: save device configuration
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        dest: "{{ config_filename }}"
         format: text
-      register: config_results
+        retrieve: committed
 
-    - debug: var=config_results
-
-    - name: copy temporary file to timestamped config file if different
-      copy:
-        src: "{{ temp_conf_file }}"
-        dest: "{{ conf_file }}"
-      when: config_results.changed
+    - name: display path to latest backup file
+      debug:
+        msg: "The configuration backup is in {{ config_filename }}"

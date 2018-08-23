@@ -1,0 +1,53 @@
+---
+- name: Generate and Install Configuration File
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    tmp_dir: "tmp"
+    conf_file: "{{ tmp_dir}}/{{ inventory_hostname }}.conf"
+    netmask: "26"
+    username: root
+
+  # vars_prompt:
+  #   - name: username
+  #     prompt: Junos Username
+  #     private: no
+  #
+  #   - name: password
+  #     prompt: Junos Password
+  #     private: yes
+
+  tasks:
+    - name: confirm or create configs directory
+      file:
+        path: "{{ tmp_dir }}"
+        state: directory
+      run_once: yes
+
+    - name: save device information using template
+      template:
+        src: template/initial-ex-vlan.j2
+        dest: "{{ conf_file }}"
+
+    - name: install generated configuration file onto device
+      juniper_junos_config:
+        provider:
+          host: "{{ inventory_hostname }}"
+          mode: serial
+          port: "/dev/cu.usbserial-AH02PIG9"
+          user: "{{ username }}"
+          # passwd: "{{ password }}"
+          timeout: 120
+        src: "{{ conf_file }}"
+        load: override
+        comment: "playbook initial-setup-serial.yaml"
+
+    # - name: delete generated configuration file
+    #   file:
+    #     path: "{{ conf_file }}"
+    #     state: absent
