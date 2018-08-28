@@ -1,0 +1,3 @@
+set system ntp boot-server 17.253.20.253
+set system ntp server 17.253.20.253
+set system ntp server 129.6.15.30

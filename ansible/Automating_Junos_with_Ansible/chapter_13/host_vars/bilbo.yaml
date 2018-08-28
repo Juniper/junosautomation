@@ -1,12 +1,13 @@
 ---
 ansible_host: 198.51.100.5
-aja_host:
+aja2_host:
   dns_servers:
-    - 5.7.9.11
-    - 5.7.9.12
-    - 5.7.9.13
-  snmp_description: EX2200-C for testing
-  snmp_location: "Sean's home office"
+    - 8.8.4.4
+    - 8.8.8.8
+    - 198.51.100.101
+  snmp:
+    description: EX2200-C for testing
+    location: Sean's home office
   uplinks:
     - ge-0/1/0
     - ge-0/1/1

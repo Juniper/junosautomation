@@ -1,0 +1,40 @@
+---
+- name: Get device uptime
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+
+  tasks:
+    - name: get uptime using galaxy module
+      juniper_junos_rpc:
+        rpcs:
+          - get-system-uptime-information
+        provider:
+          host: "{{ ansible_host }}"
+          port: 22
+          user: "{{ username }}"
+          passwd: "{{ password }}"
+      register: uptime
+
+    - name: query uptime information
+      xml:
+        xmlstring: "{{ uptime.stdout }}"
+        xpath: //system-booted-time/date-time | //last-configured-time/date-time
+        content: text
+      register: last_boot
+
+    - name: show query results
+      debug:
+        msg: "Last booted {{ last_boot.matches[0]['date-time'] }}; last configured {{ last_boot.matches[1]['date-time'] }}"

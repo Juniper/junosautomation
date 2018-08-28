@@ -1,0 +1,29 @@
+---
+- name: Get Junos version
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    connection_settings:
+      host: "{{ ansible_host }}"
+
+  tasks:
+    - name: get Junos version
+      juniper_junos_rpc:
+        rpcs:
+          - get-software-information
+        provider: "{{ connection_settings }}"
+        formats: text
+      register: jversion
+      retries: 2
+      delay: 15
+      until: jversion is success
+      # until: (jversion is success) or (jversion.msg.find("ConnectAuthError") >= 0)
+
+    - name: display Junos version
+      debug:
+        var: jversion

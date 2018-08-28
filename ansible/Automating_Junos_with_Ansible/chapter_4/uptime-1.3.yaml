@@ -2,6 +2,8 @@
 - name: Get device uptime
   hosts:
     - all
+  roles:
+    - Juniper.junos
   connection: local
   gather_facts: no
 
@@ -15,19 +17,21 @@
       private: yes
 
   tasks:
-    - name: get uptime using ansible core module
-      junos_command:
+    - name: get uptime using galaxy module
+      juniper_junos_command:
         commands:
           - show system uptime
         provider:
           host: "{{ ansible_host }}"
           port: 22
-          username: "{{ username }}"
-          password: "{{ password }}"
+          user: "{{ username }}"
+          passwd: "{{ password }}"
       register: uptime
 
-    # - name: display uptimes
-    #   debug: var=uptime['stdout_lines']
+    # - name: display uptimes (Python style)
+    #   debug:
+    #     var: uptime['stdout_lines']
 
-    - name: display uptimes
-      debug: var=uptime.stdout_lines
+    - name: display uptimes (Ansible shortcut)
+      debug:
+        var: uptime.stdout_lines

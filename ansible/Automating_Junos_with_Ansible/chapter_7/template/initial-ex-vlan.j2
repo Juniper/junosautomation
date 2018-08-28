@@ -1,15 +1,14 @@
-#jinja2: lstrip_blocks: True
 system {
     host-name {{ inventory_hostname }};
     root-authentication {
-        encrypted-password "$5$AMMtq0mL$S45fRiFekBrs73M/RovN5jpax4GCGpYI2mGr1VfIkrC";
+        encrypted-password "$1$JG/DQ4TP$/SqMDBsjmLO2IXvawjjGQ.";
     }
     login {
         user sean {
             uid 2000;
             class super-user;
             authentication {
-                encrypted-password "$5$gGYLAk8H$RHk/T8Rjq7MSNnPHEey8jNJwnS28TEK/WUlknZnU4X5";
+                encrypted-password "$1$U25qzyIz$AxMzsxhD/lj1wlDpd1f96.";
             }
         }
     }
@@ -21,16 +20,14 @@ system {
     }
 }
 interfaces {
-    interface-range aja {
-        member ge-0/0/8;
-        member ge-0/0/9;
-        member ge-0/0/10;
-        member ge-0/0/11;
+    interface-range aja2 {
+        member ge-0/1/0;
+        member ge-0/1/1;
         unit 0 {
             family ethernet-switching {
                 port-mode access;
                 vlan {
-                    members aja;
+                    members aja2;
                 }
             }
         }
@@ -44,7 +41,7 @@ interfaces {
     }
 }
 vlans {
-    aja {
+    aja2 {
         l3-interface vlan.0;
     }
 }

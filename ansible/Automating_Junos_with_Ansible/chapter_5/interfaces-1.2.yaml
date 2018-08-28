@@ -1,0 +1,36 @@
+---
+- name: Get device uptime
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars_prompt:
+    - name: username
+      prompt: Junos Username
+      private: no
+
+    - name: password
+      prompt: Junos Password
+      private: yes
+
+  tasks:
+    - name: get interface information
+      juniper_junos_rpc:
+        rpcs:
+          - get-interface-information
+        formats: text
+        kwargs:
+          terse: True
+          interface_name: ge-0/0/0
+        provider:
+          host: "{{ ansible_host }}"
+          user: "{{ username }}"
+          passwd: "{{ password }}"
+      register: interfaces
+
+    - name: display interfaces
+      debug:
+        var: interfaces

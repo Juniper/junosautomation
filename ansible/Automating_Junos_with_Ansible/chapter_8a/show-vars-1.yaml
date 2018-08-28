@@ -11,10 +11,14 @@
     name_plus_host: "{{ inventory_hostname}} :: {{ ansible_host }}"
 
   tasks:
-    - debug: var=test1
-    - debug: var=Test1
-    - debug: var=name_plus_host
+    - debug:
+        var: test1
 
+    - debug:
+        var: Test1
+
+    - debug:
+        var: name_plus_host
 
 - name: Show variables 1, second play
   hosts:
@@ -23,6 +27,11 @@
   gather_facts: no
 
   tasks:
-    - debug: var=test1
-    - debug: var=Test1
-    - debug: var=name_plus_host
+    - debug:
+        var: test1
+
+    - debug:
+        var: Test1
+
+    - debug:
+        var: name_plus_host

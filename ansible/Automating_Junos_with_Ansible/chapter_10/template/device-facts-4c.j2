@@ -1,0 +1,18 @@
+#jinja2: lstrip_blocks: True
+{# better formatting and key-sorted output #}
+{% for jkey in junos.keys()|sort %}
+  {% set jvalue = junos[jkey] %}
+  {% if jvalue is mapping %}
+    {{ jkey }}:
+      {% for jk in jvalue.keys()|sort %}
+        {{ jk }}: {{ jvalue[jk] }}
+      {% endfor %}
+  {% elif (jvalue is not string) and (jvalue is iterable) %}
+    {{ jkey }}:
+      {% for value in jvalue|sort %}
+        - {{ value }}
+      {% endfor %}
+  {% else %}
+    {{ jkey }}: {{ jvalue }}
+  {% endif %}
+{% endfor %}

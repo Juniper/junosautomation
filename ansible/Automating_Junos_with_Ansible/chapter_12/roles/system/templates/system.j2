@@ -1,7 +1,6 @@
 #jinja2: lstrip_blocks: True
-{# copy device facts into shorter variable names and lower-case the data #}
-{% set model = jfact.facts.model.lower() %}
-{% set personality = jfact.facts.personality|lower %}
+{% set model = junos.model.lower() %}
+{% set personality = junos.personality | lower %}
 
 {#- Determine SSH connection-limit and rate-limit based on device facts #}
 {% if model == 'vsrx' %}
@@ -15,19 +14,15 @@
 {#- Generate basic settings for the device #}
 system {
     host-name {{ inventory_hostname }};
-    domain-name aja.com;
-    domain-search [ aja.com aja.net ];
-    root-authentication {
-        encrypted-password "{{ root_hash }}";
-    }
+    domain-name aja2.com;
+    domain-search [ aja2.com aja2.net ];
     replace:
     name-server {
-      {% for server in aja_host.dns_servers %}
+      {% for server in aja2_host.dns_servers %}
         {{ server }};
       {% endfor %}
     }
     services {
-        ftp;
         delete: ftp;
         netconf {
             ssh {
@@ -39,16 +34,12 @@ system {
             connection-limit {{ max_ssh }};
             rate-limit {{ max_ssh }};
         }
-        telnet;
         delete: telnet;
-        web-management {
-            http;
-        }
         delete: web-management;
     }
     replace:
     ntp {
-      {% for ntp in aja_site.ntp_servers %}
+      {% for ntp in aja2_site.ntp_servers %}
         server {{ ntp }};
       {% endfor %}
     }

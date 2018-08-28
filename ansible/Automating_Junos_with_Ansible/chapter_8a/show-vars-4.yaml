@@ -7,7 +7,7 @@
   tasks:
     - name: construct timestamp
       set_fact:
-        timestamp: "{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}-{{ ansible_date_time.minute }}"
+        timestamp: "{{ansible_date_time.weekday}} {{ ansible_date_time.date }} at {{ ansible_date_time.time }}"
 
 - name: Show variables 4, devices play
   hosts:

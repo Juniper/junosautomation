@@ -12,7 +12,10 @@
     config_assemble: "{{ user_data_path }}/config/{{ inventory_hostname }}"
     config_assemble_build: "{{ config_assemble }}/build"
     config_file: "{{ config_assemble }}/snmp.conf"
-    playbook_name: snmp_settings.yaml
+    playbook_name: snmp-settings.yaml
+    connection_settings:
+      host: "{{ ansible_host }}"
+      timeout: 120
 
   pre_tasks:
     - name: confirm or create device config directory
@@ -39,17 +42,18 @@
 
   handlers:
     - name: install config onto device
-      junos_install_config:
-        host: "{{ ansible_host }}"
-        file: "{{ config_file }}"
-        timeout: 120
-        replace: yes
-        confirm: 10
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        src: "{{ config_file }}"
+        load: replace
+        confirmed: 5
+        diff: yes
+        ignore_warning: yes
         comment: "playbook {{ playbook_name }}, commit confirmed"
       notify: confirm commit
 
     - name: confirm commit
-      junos_commit:
-        host: "{{ ansible_host }}"
-        timeout: 120
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        commit: yes
         comment: "playbook {{ playbook_name }}, confirming previous commit"

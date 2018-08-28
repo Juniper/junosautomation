@@ -1,0 +1,22 @@
+system {
+    host-name {{ inventory_hostname }};
+    login {
+        user sean {
+            uid 2000;
+            class super-user;
+            authentication {
+                ssh-rsa "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxgT8ga1uYbS3bxXPPv7aEiTvSwXnK/7xu3NB0+t1njMBuUcgwn7zwtnayQyLS+ef3rNP7WZXwFYxUeFbVwdkLUn9/xvDM5Qi2m/6WRP/yrTRtEvNP4lUsZRH+IXQc59JOKfYqGkvbgfshnmtHJHYVOn/1E/w0cNDYg4oH6KbcqYb+isbKhdiqpDBvLsF9h0GwhaiLk2BpVutw2BZoeKN9vrF+OmcaB0WVzGvwblSHDpXdLfMJuHAyEhZImNSv4bXNAYFGht9zpdTwudP5qfwJo5304Sn62UaOzVN2zGogXKzxgxgAjeJ87io0Graiwo5q9kZYksjXvPzOaX3gt8Uv sean@mbp15.local";
+            }
+        }
+    }
+    replace:
+    name-server {
+        {{ dns1 }};
+        {{ dns2 }};
+    }
+    services {
+        netconf {
+            ssh;
+        }
+    }
+}

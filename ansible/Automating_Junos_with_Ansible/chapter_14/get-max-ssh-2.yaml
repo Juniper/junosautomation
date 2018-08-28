@@ -1,0 +1,18 @@
+---
+- name: Get maximum ssh rate-limit and connection-limit
+  hosts:
+    - all
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: get max ssh
+      max_ssh_2:
+        host: "{{ ansible_host }}"
+        # test_value: 50
+        rate_limit: 15
+        connection_limit: 25
+      register: max_ssh
+
+    - debug:
+        var: max_ssh

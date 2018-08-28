@@ -10,10 +10,10 @@
   vars:
     tmp_dir: "tmp"
     conf_file: "{{ tmp_dir}}/{{ inventory_hostname }}.conf"
-    netmask: "24"
+    netmask: "26"
     username: root
-    terminal_server: 198.51.100.100
-    term_serv_port: 7001
+    terminal_server: 198.51.100.50
+    term_srv_port: 7001
 
   # vars_prompt:
   #   - name: username
@@ -29,6 +29,7 @@
       file:
         path: "{{ tmp_dir }}"
         state: directory
+      run_once: yes
 
     - name: save device information using template
       template:
@@ -36,13 +37,19 @@
         dest: "{{ conf_file }}"
 
     - name: install generated configuration file onto device
-      junos_install_config:
-        host: "{{ terminal_server }}"
-        file: "{{ conf_file }}"
-        user: "{{ username }}"
-        # passwd: "{{ password }}"
-        timeout: 120
-        overwrite: yes
-        mode: telnet
-        port: "{{ term_serv_port }}"
+      juniper_junos_config:
+        provider:
+          host: "{{ terminal_server }}"
+          mode: telnet
+          port: "{{ term_srv_port }}"
+          user: "{{ username }}"
+          # passwd: "{{ password }}"
+          timeout: 120
+        src: "{{ conf_file }}"
+        load: override
         comment: "playbook initial-setup-ts.yaml"
+
+    # - name: delete generated configuration file
+    #   file:
+    #     path: "{{ conf_file }}"
+    #     state: absent

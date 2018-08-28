@@ -1,0 +1,5 @@
+---
+aja2_servers:
+  dns_servers:
+    - 8.8.4.4
+    - 8.8.8.8

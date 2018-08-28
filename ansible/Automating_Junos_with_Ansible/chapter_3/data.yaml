@@ -1,0 +1,22 @@
+---
+test1:
+  avg: 71
+  sum: 215
+  values:
+    - 62
+    - 74
+    - 79
+test2:
+  avg: 86
+  sum: 259
+  values:
+    - 94
+    - 73
+    - 92
+test3:
+  avg: 47
+  sum: 142
+  values:
+    - 2
+    - 46
+    - 94

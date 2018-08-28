@@ -1,0 +1,72 @@
+---
+- name: Find max SSH -- testing Junos CLI approaches
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    out_of_range_value: 50
+    desired_value: 15
+    connection_settings:
+      host: "{{ ansible_host }}"
+      timeout: 120
+
+  tasks:
+    - name: check that device is responding to NETCONF
+      wait_for:
+        host: "{{ ansible_host }}"
+        port: 830
+        timeout: 5
+
+    - name: test for max value -- install set commands onto device
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        load: set
+        lines:
+          - set system services ssh rate-limit {{ out_of_range_value }}
+        comment: playbook test-max-ssh-ansible-only.yaml, setting ssh rate-limit
+      register: jresult
+      ignore_errors: yes
+
+    - name: display results of test for max value
+      debug:
+        var: jresult
+
+    - name: message when setting "out of range" value worked
+      debug:
+        msg: >
+          Configuration with test value {{ out_of_range_value }} loaded without error,
+          max value is at least the test value. Rolling back change...
+      when: not jresult.failed
+
+    - name: roll back test value
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        rollback: 1
+        comment: playbook test-max-ssh-ansible-only.yaml, rolling back ssh rate-limit
+      when: not jresult.failed
+
+    - name: set max_allowed_ssh when test failed
+      set_fact:
+        max_allowed_ssh: '{{ jresult.msg | regex_search("\d+\.\.(\d+)") | regex_replace("\d+\.\.(\d+)", "\1") }}'
+      when: jresult.failed
+
+    - name: set max_allowed_ssh when test did not fail (test value is in range)
+      set_fact:
+        max_allowed_ssh: "{{ out_of_range_value }}"
+      when: not jresult.failed
+
+    - name: display max_allowed_ssh when test failed
+      debug:
+        var: max_allowed_ssh
+
+    - name: set suggested value for rate-limit and connection-limit
+      set_fact:
+        ssh_limit: "{{ (desired_value < (max_allowed_ssh | int)) | ternary(desired_value, max_allowed_ssh) }}"
+
+    - name: display suggested value for rate-limit and connection-limit
+      debug:
+        msg: "Suggested value for rate-limit and connection-limit is {{ ssh_limit }}"

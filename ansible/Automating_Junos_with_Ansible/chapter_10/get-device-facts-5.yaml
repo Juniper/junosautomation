@@ -1,0 +1,60 @@
+---
+- name: Get facts from Junos device and save as CSV file
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    facts_dir: "{{ user_data_path }}/facts"
+    facts_build_dir: "{{ user_data_path }}/facts/build"
+    connection_settings:
+      host: "{{ ansible_host }}"
+    systime: "{{ ansible_date_time.time | replace(':', '-') }}"
+    timestamp: "{{ ansible_date_time.date }}_{{ systime }}"
+    report_file: "{{ facts_dir }}/device-facts_{{ timestamp }}.csv"
+
+  tasks:
+    - name: get localhost environment info
+      setup:
+      run_once: yes
+      delegate_to: localhost
+
+    - name: confirm/create report directory
+      file:
+        path: "{{ facts_dir }}"
+        state: directory
+      run_once: yes
+      delegate_to: localhost
+
+    - name: delete old build directory if present
+      file:
+        path: "{{ facts_build_dir }}"
+        state: absent
+      run_once: yes
+      delegate_to: localhost
+
+    - name: create build directory
+      file:
+        path: "{{ facts_build_dir }}"
+        state: directory
+      run_once: yes
+      delegate_to: localhost
+
+    - name: get device facts
+      juniper_junos_facts:
+        provider: "{{ connection_settings }}"
+
+    - name: save device facts
+      template:
+        src: template/device-facts-5.j2
+        dest: "{{ facts_build_dir }}/{{ inventory_hostname }}.csv"
+
+    - name: assemble inventory report
+      assemble:
+        src: "{{ facts_build_dir }}"
+        dest: "{{ report_file }}"
+      run_once: yes
+      delegate_to: localhost

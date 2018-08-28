@@ -1,0 +1,28 @@
+---
+- name: Get LLDP neighbor information
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  vars:
+    lldp:
+      results:
+        - item: 1
+          stdout_lines:
+            - hello world
+            - goodbye cruel world
+        - item: 2
+          stdout_lines:
+            - ansible
+            - galaxy
+
+  tasks:
+    - name: display lldp neighbor data
+      debug:
+        var: lldp
+        # var: item
+        # var: item.stdout_lines
+        # msg: "{{ item.stdout_lines }}"
+      # with_items: "{{ lldp.results }}"
+      # loop_control:
+      #   label: "{{ item.item }}"

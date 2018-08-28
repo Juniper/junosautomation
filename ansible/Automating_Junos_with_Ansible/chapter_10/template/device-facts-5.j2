@@ -1,0 +1,6 @@
+"{{ inventory_hostname }}","{{ junos.version }}","{{ junos.model }}","{{ junos.switch_style }}","{{ junos.serialnumber }}","{{ junos.has_2RE }}","{{ junos.master }}","{{ junos.vc_capable }}",
+{%- if junos.vc_fabric is none %}"-",{% else %}"{{ junos.vc_fabric }}",{% endif %}
+{%- if junos.vc_master is none %}"-",{% else %}"{{ junos.vc_master }}",{% endif %}
+{%- if junos.vc_mode is none %}"-",{% else %}"{{ junos.vc_mode }}",{% endif %}
+{%- if junos.srx_cluster is none %}"-",{% else %}"{{ junos.srx_cluster }}",{% endif %}
+{%- if junos.srx_cluster_id is none %}"-"{% else %}"{{ junos.srx_cluster_id }}"{% endif %}

@@ -10,46 +10,57 @@
   vars:
     tmp_dir: "tmp"
     conf_file: "{{ tmp_dir}}/{{ inventory_hostname }}.conf"
+    connection_settings:
+      host: "{{ ansible_host }}"
+      timeout: 120
 
   tasks:
-    - name: get device facts
-      junos_get_facts:
-        host: "{{ ansible_host }}"
-      register: jfact
-
-    - name: show device facts
-      debug:
-        var: jfact
-        verbosity: 1
-
     - name: confirm or create configs directory
       file:
         path: "{{ tmp_dir }}"
         state: directory
+      run_once: yes
 
-    - name: save device information using template
+    - name: get device facts
+      juniper_junos_facts:
+        provider: "{{ connection_settings }}"
+
+    - name: display device facts
+      debug:
+        var: junos
+        verbosity: 1
+
+    - name: save device configuration using template
       template:
         src: template/base-settings-4.j2
         dest: "{{ conf_file }}"
 
     - name: install generated configuration file onto device
-      junos_install_config:
-        host: "{{ ansible_host }}"
-        file: "{{ conf_file }}"
-        timeout: 120
-        replace: yes
-        confirm: 10
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
+        src: "{{ conf_file }}"
+        load: replace
         comment: "playbook base-settings.yaml, commit confirmed"
-      notify: confirm commit
+        confirmed: 5
+        diff: yes
+        ignore_warning: yes
+      register: config_results
+      notify: confirm previous commit
 
-    - name: delete generated configuration file
-      file:
-        path: "{{ conf_file }}"
-        state: absent
+    - name: show configuration change
+      debug:
+        var: config_results.diff_lines
+      when: config_results.diff_lines is defined
+
+    # - name: delete generated configuration file
+    #   file:
+    #     path: "{{ conf_file }}"
+    #     state: absent
 
   handlers:
-    - name: confirm commit
-      junos_commit:
-        host: "{{ ansible_host }}"
-        timeout: 120
+    - name: confirm previous commit
+      juniper_junos_config:
+        provider: "{{ connection_settings }}"
         comment: "playbook base-settings.yaml, confirming previous commit"
+        commit: yes
+        diff: no

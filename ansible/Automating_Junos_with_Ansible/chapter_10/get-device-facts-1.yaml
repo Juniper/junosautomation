@@ -7,10 +7,14 @@
   connection: local
   gather_facts: no
 
+  vars:
+    connection_settings:
+      host: "{{ ansible_host }}"
+
   tasks:
     - name: get device facts
-      junos_get_facts:
-        host: "{{ ansible_host }}"
+      juniper_junos_facts:
+        provider: "{{ connection_settings }}"
       register: junos_facts
 
     - name: show device facts
