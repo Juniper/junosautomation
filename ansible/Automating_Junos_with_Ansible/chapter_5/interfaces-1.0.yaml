@@ -1,5 +1,5 @@
 ---
-- name: Get device uptime
+- name: Get device interfaces
   hosts:
     - all
   roles:
