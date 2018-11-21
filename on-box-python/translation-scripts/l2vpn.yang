@@ -1,0 +1,68 @@
+module l2vpn {
+
+  yang-version "1";
+  namespace "http://yang.juniper.net/customyang/l2vpn";
+  prefix "l2vpn";
+
+  organization
+    "Juniper Networks";
+
+  description
+    "A demo custom Yang module for L2VPN service";
+
+  revision "2017-01-21" {
+    description
+      "Initial revision";
+  }
+
+  container l2vpn {
+    description "Configure L2VPN service";
+    container global {
+      leaf as-number  {
+        type string;
+        mandatory true;
+      }
+      leaf side {
+        description "Local connection point must either be hub or spoke";
+        type enumeration {
+          enum hub;
+          enum spoke;
+        }
+        mandatory true;
+      }
+    }
+    container lines {
+      list line {
+        description "L2VPN p2p links";
+        key "line-id";
+        leaf line-id {
+          description "Unique Line Identifier";
+          type uint32;
+          mandatory true;
+        }
+        leaf interface {
+          description "Local termination logical interface";
+          type string;
+        }
+        leaf vlan {
+          description "Local VLAN Id";
+          type uint16 {
+            range 0..4094;
+          }
+          mandatory true;
+        }
+        leaf side {
+          description "Local connection point must either be hub or spoke";
+          type enumeration {
+            enum hub;
+            enum spoke;
+          }
+        }
+        leaf name {
+          description "Line name/description";
+          type string;
+        }
+      }
+    }
+  }
+}
