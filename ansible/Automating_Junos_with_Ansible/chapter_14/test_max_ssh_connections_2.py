@@ -17,7 +17,7 @@ try:
     #   <class directory>/max_ssh_connections_2.py
     from max_ssh_connections_2 import MaxSSHConnections
 except ImportError as err:
-    print '* * * Error importing required modules! * * *'
+    print('* * * Error importing required modules! * * *')
     raise
 
 
@@ -36,7 +36,7 @@ def main():
     try:
         find_max.run()
     except Exception as err:
-        print str(err)
+        print(str(err))
         sys.exit(1)
 
     pprint(find_max.results)

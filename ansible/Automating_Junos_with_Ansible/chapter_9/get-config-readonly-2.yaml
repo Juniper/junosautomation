@@ -1,0 +1,80 @@
+---
+- name: Save configurations from Junos devices to files using read-only account
+  hosts:
+    - all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  vars:
+    systime: "{{ ansible_date_time.time | replace(':', '-') }}"
+    timestamp: "{{ ansible_date_time.date }}_{{ systime }}"
+    config_dir: "{{ user_data_path }}/config_backups/{{ inventory_hostname }}"
+    config_filename: "{{ config_dir }}/{{ inventory_hostname }}_{{ timestamp }}.conf"
+    diff_filename: "{{ config_dir }}/{{ inventory_hostname }}_{{ timestamp }}.diff"
+    connection_settings:
+      host: "{{ ansible_host }}"
+      user: backup
+
+  tasks:
+    - name: get localhost environment info (for date and time)
+      setup:
+      run_once: yes
+      delegate_to: localhost
+
+    - name: confirm/create device configuration directory
+      file:
+        path: "{{ config_dir }}"
+        state: directory
+
+    - name: get list of previous backups (if any)
+      find:
+        file_type: file
+        path: "{{ config_dir }}"
+        patterns: "{{ inventory_hostname }}*.conf"
+      register: old_configs_details
+
+    - debug:
+        var: old_configs_details
+
+    - name: save name of most recent previous backup
+      set_fact:
+        prev_config: "{{ old_configs_details.files | sort(attribute='path') | map(attribute='path') | list | last }}"
+      when: old_configs_details.matched > 0
+
+    - debug:
+        var: prev_config
+
+    - name: save device configuration
+      juniper_junos_command:
+        provider: "{{ connection_settings }}"
+        commands: show configuration
+        dest: "{{ config_filename }}"
+        format: text
+        return_output: no
+
+    - name: display path to latest backup file
+      debug:
+        msg: "The configuration backup is in {{ config_filename }}"
+
+    - name: get difference between backups
+      shell: diff -d -I '^## Last [change|commit]' {{ prev_config }} {{ config_filename }}
+      when: prev_config is defined
+      register: diff_result
+      failed_when: diff_result.rc > 1
+
+    - debug:
+        var: diff_result
+
+    - name: save diff file when change found
+      template:
+        src: template/save-diff.j2
+        dest: "{{ diff_filename }}"
+      when: (diff_result.changed) and (diff_result.rc == 1)
+
+    - name: delete new backup if same as previous
+      file:
+        path: "{{ config_filename }}"
+        state: absent
+      when: (diff_result.changed) and (diff_result.rc == 0)

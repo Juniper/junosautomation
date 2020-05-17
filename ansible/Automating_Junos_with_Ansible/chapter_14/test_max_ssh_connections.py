@@ -178,7 +178,7 @@ def main():
     try:
         find_max.run()
     except Exception as err:
-        print str(err)
+        print(str(err))
         sys.exit(1)
 
     pprint(find_max.results)
