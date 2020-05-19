@@ -1,3 +1,3 @@
-{% for fact_name, fact_data in junos.iteritems() %}
+{% for fact_name, fact_data in junos.items() %}
     {{ fact_name }}: {{ fact_data }}
 {% endfor %}
