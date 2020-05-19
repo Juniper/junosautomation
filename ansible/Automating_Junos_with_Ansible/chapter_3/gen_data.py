@@ -29,11 +29,11 @@ def generate():
 
 def main():
     data = generate()
-    print 'Generated data as JSON:'
-    print json.dumps(data, sort_keys=True, indent=4)
-    print '========================='
-    print 'Generated data as YAML:'
-    print yaml.safe_dump(data, default_flow_style=False)
+    print('Generated data as JSON:')
+    print(json.dumps(data, sort_keys=True, indent=4))
+    print('=========================')
+    print('Generated data as YAML:')
+    print(yaml.safe_dump(data, default_flow_style=False))
 
 
 ######################################################################
