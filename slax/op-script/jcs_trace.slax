@@ -1,0 +1,17 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+    expr jcs:output("Testing jcs:trace");
+    expr jcs:trace( "test Script is running to verify jcs:trace extn function." );
+
+    expr jcs:output("Testing slax:trace");
+    expr slax:trace( "test Script is running to verify slax:trace extn function." );
+}
+}

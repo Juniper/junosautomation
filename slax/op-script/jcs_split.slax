@@ -1,0 +1,29 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+    expr jcs:output("Testing jcs:split");
+    var $pattern1 = "(:)";
+    var $substring = jcs:split($pattern1, "123:abc:456:xyz:789");
+    <output> $substring[1];
+    <output> $substring[2];
+    <output> $substring[3];
+    <output> $substring[4];
+    <output> $substring[5];
+
+    expr jcs:output("Testing slax:split");
+    var $pattern2 = "(:)";
+    var $substring2 = slax:split($pattern2, "123:abc:456:xyz:789");
+    <output> $substring2[1];
+    <output> $substring2[2];
+    <output> $substring2[3];
+    <output> $substring2[4];
+    <output> $substring2[5];
+}
+}

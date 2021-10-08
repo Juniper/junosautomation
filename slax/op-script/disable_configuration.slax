@@ -1,0 +1,29 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "/var/db/scripts/import/junos.xsl";
+match / {
+    <op-script-results> {
+        /* open the connection */
+        var $connection_handle = jcs:open();
+        var $interface-name = "ge-0/0/0";
+        var $disable = {
+            <configuration> {
+               <interfaces> {
+                  <interface> {
+                      <name> $interface-name;
+                     <disable>;
+                        }
+                    }
+                }
+           };
+            var $results = {
+                   call jcs:load-configuration($connection=$connection_handle, $configurat
+ion=$disable);
+            }
+            <output>$results;
+        /* Close the connection */
+        expr jcs:close($connection_handle);
+      }
+    }

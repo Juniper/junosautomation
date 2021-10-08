@@ -1,0 +1,22 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "../import/junos.xsl"; match configuration {
+/* Ensure that ssh is enabled */
+if( jcs:empty( system/services/ssh ) ) {
+<xnm:error> {
+<message> "SSH must be enabled.";
+} }
+/* Ensure that user account jnpr exists */
+if( jcs:empty( system/login/user[name == "jnpr"] ) ) {
+<xnm:error> {
+<message> "The jnpr user account must be created.";
+} }
+/* Verify that fxp0 has an IP address */
+var $fxp0-interface = interfaces/interface[name == "fxp0"];
+if( jcs:empty( $fxp0-interface/unit[name=="0"]/family/inet/address/name ) ) {
+<xnm:error> {
+<message> "fxp0 must have an IP address.";
+} }
+}

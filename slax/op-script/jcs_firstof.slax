@@ -1,0 +1,24 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+    expr jcs:output("Testing jcs:first-of");
+    var $a;
+    var $b = 4;
+    var $result = jcs:first-of($a, $b, "expression");
+    <output> $result;
+
+    expr jcs:output("Testing slax:first-of");
+      var $a1;
+      var $b1 = 4;
+      var $result1 = slax:first-of($a1, $b1, "expression");
+      <output> $result1;
+
+}
+}

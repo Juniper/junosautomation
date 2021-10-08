@@ -1,0 +1,21 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+   expr jcs:output("Testing jcs:regrex");
+   var $pattern = "([0-9]+)(:*)([a-z]*)";
+   var $a = jcs:regex($pattern, "123:xyz");
+   <output> $a;
+
+   expr jcs:output("Testing slax:regrex");
+   var $pattern1 = "([0-9]+)(:*)([a-z]*)";
+   var $a1 = slax:regex($pattern1, "123:xyz");
+   <output> $a1;
+}
+}

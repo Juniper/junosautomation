@@ -1,0 +1,19 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+    expr jcs:output("Testing jcs:execute");
+    var $rpc = <get-software-information>;
+    var $connection = jcs:open( );
+    var $results = jcs:execute($connection, $rpc);
+    copy-of $results;
+    expr jcs:close($connection);
+
+}
+}

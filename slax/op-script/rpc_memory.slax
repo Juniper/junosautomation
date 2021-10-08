@@ -1,0 +1,25 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "../import/junos.xsl";
+match / { <op-script-results> {
+/* Get show system storage */
+var $system-memory = jcs:invoke( "get-system-memory-information" );
+var $memory-total = $system-memory/system-memory-summary-information/system-memory-total;
+var $total-percent = $system-memory/system-memory-summary-information/system-memory-total-
+percent;
+var $memory-reserved = $system-memory/system-memory-summary-information/system-memory-rese
+rved;
+var $memory-reserved-percent =  $system-memory/system-memory-summary-information/system-me
+mory-reserved-percent;
+expr jcs:output("Total memory");
+expr jcs:output($memory-total);
+expr jcs:output("Total percent");
+expr jcs:output($total-percent);
+expr jcs:output("Memory Reserved");
+expr jcs:output($memory-reserved);
+expr jcs:output("Memory Reserved percent");
+expr jcs:output($memory-reserved-percent);
+}
+}

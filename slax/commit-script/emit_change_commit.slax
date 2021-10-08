@@ -1,0 +1,22 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "../import/junos.xsl";
+match configuration {
+    var $lo0-interface = interfaces/interface[name=="lo0"]/unit[name=="0"];
+        if( jcs:empty( $lo0-interface/family/inet/filter/input[filter-name == "in"] ) ) {
+             /* Create the change */
+             var $change = {
+                    <filter> {
+                        <input> {
+                            <filter-name> "in";
+                           }
+                        }
+                }
+            call jcs:emit-change( $dot = $lo0-interface/family/inet, $content = $change );
+                <xnm:warning> {
+                      <message> "Adding lo0 input filter.";
+                }
+         }
+}

@@ -1,0 +1,15 @@
+version 1.1;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns str exclude = "http://exslt.org/strings";
+import "../import/junos.xsl";
+
+match / {
+    <op-script-results> {
+        copy-of str:split('a, simple, list', ', ');
+        copy-of str:split('date math str');
+        copy-of str:split('foo', '');
+    }
+}

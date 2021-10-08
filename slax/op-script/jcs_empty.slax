@@ -1,0 +1,21 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+    expr jcs:output("Testing jcs:empty jcs:open jcs:close jcs:output");
+    var $conn = jcs:open();
+    if (jcs:empty($conn)) {
+        expr jcs:output("open connection is empty ");
+    } else {
+        expr jcs:output("open connection  is not empty");
+    }
+    expr jcs:close($conn);
+
+}
+}
