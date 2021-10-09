@@ -1,0 +1,35 @@
+version 1.1;
+
+ns curl extension = "http://xml.libslax.org/curl";
+match / {
+     <op-script-results> {
+        var $info = {
+                <method> "email";
+                <server> "mailme.gmail.com";
+                <from> "test@example.com";
+                <subject> "Testing...";
+                <contents> "Hello,
+                sending from op-script
+                ";
+        }
+
+        var $curl = curl:open();
+        var $set1 = curl:set($curl,$info);
+
+        var $addr1 = <to> "test1@example.com";
+
+        var $res1 = curl:perform($curl, $addr1);
+                    copy-of $res1;
+
+        var $addr2 = <to> "test2@example.com";
+
+        var $res2 = curl:perform($curl, $addr2);             
+                    copy-of $res2;                                     
+                                                                        
+        var $addr3 = <to> "test3@example.com";                
+                                                                        
+        var $res3 = curl:perform($curl, $addr3);             
+                    copy-of $res3;                                     
+        expr curl:close($curl);                                
+    }                                                               
+}

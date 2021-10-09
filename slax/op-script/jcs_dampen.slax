@@ -1,0 +1,20 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+        if (jcs:dampen('mytag1', 3, 10)) {
+
+           expr jcs:output("jcs:dampen with tag mytag1  got called less than 3 times within 10 minutes");
+        } else {
+
+           expr jcs:output("jcs:dampen with tag mytag1  got called more than 3 times within 10 minutes");
+        }
+
+}
+}

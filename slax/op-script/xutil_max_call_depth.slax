@@ -1,0 +1,13 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/Junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns xutil extension = "http://xml.libslax.org/xutil";
+import "../import/junos.xsl";
+
+match / {
+       <op-script-results> {
+           var $limit = xutil:max-call-depth();
+           <output> $limit;
+       }
+}

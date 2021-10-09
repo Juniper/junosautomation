@@ -1,0 +1,15 @@
+version 1.1;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+ns ext = "http://xmlsoft.org/XSLT/namespace";
+
+import "../import/junos.xsl";
+
+match / {
+<op-script-result> {
+    expr jcs:output("Testing jcs:printf ");
+
+    <output> slax:printf("Interface", "RT", "0-64", "65-127","128-255", "256-511", "512-1023", "1024-1518");
+}
+}

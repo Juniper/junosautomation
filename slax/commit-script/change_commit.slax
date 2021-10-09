@@ -1,0 +1,27 @@
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "../import/junos.xsl"; 
+match configuration {
+    var $messages-file = system/syslog/file[name == "messages"];
+    if( jcs:empty( $messages-file ) || count( $messages-file/* ) > 2 ||
+            jcs:empty( $messages-file/contents[ name == "any" ]/notice ) ) {
+        <change> { 
+            <system> {
+                <syslog> {
+                     <file> {
+                        <name> "messages"; 
+                            <contents> {
+                                <name> "any";
+                                <notice>; 
+                            }
+                        }
+                    }
+                }
+            }
+        <xnm:warning> {
+            <message> "Syslog messages file configuration corrected";
+        } 
+    }
+}

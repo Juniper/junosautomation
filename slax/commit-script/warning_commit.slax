@@ -1,0 +1,17 @@
+/* check-fxp0-inheritance.slax */ 
+version 1.0;
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+import "../import/junos.xsl"; 
+match configuration {
+    var $fxp0-interface = interfaces/interface[name == "fxp0"];
+/* If fxp0 is configured, then display warning */
+
+    if( $fxp0-interface ) 
+    { 
+        <xnm:warning> {
+          <message> "fxp0 configuration is present";
+        }
+    }
+}

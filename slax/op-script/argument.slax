@@ -1,0 +1,15 @@
+version 1.0;
+ns Junos = "http://xml.juniper.net/Junos/*/Junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/Junos/commit-scripts/1.0";
+import "../import/junos.xsl";
+
+/* Command-line arguments */ 
+param $string1;
+param $string2;
+match / { 
+	<op-script-results> {
+		/* Output the command-line arguments to the console */
+		<output> " Here are your combined strings: " _ $string1 _ $string2;
+	}
+}

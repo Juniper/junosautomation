@@ -1,0 +1,18 @@
+version 1.0;
+ns Junos = "http://xml.juniper.net/Junos/*/Junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/Junos/commit-scripts/1.0";
+import "../import/junos.xsl";
+/* This is a Global Variable */
+var $a = 10;
+
+match / { 
+<op-script-results> 
+   {
+    /* This is a variable with template scope */ 
+    var $b = 20;
+
+    /* Output both variables to the console */
+    <output> $a + $b;
+   }
+}

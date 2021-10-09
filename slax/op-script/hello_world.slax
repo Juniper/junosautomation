@@ -1,0 +1,11 @@
+version 1.1;
+ns Junos = "http://xml.juniper.net/Junos/*/Junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/Junos/commit-scripts/1.0";
+import "../import/junos.xsl";
+match / { 
+<op-script-results> 
+    {
+        <output> "Hello World!";
+    }
+}

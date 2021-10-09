@@ -1,0 +1,134 @@
+version 1.1;
+ns bit extension = "http://xml.libslax.org/bit";
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+mvar $output;
+match / {
+     <op-script-results> {
+
+
+        <output> "bit:nand(0,0) -> " _ bit:nand(0, 0);
+        <output> "bit:nand(0,1) -> " _ bit:nand(0, 1);
+        <output> "bit:nand(1,0) -> " _ bit:nand(1, 0);                  
+        <output> "bit:nand(1,1) -> " _ bit:nand(1, 1);                  
+        <output> "bit:nand(1111111111111111111111111111111,1111111111111111111111111111111 ) -> " _ bit:nand('1111111111111111111111111111111','1111111111111111111111111111111');
+                                                                        
+        <output> "bit:nor(0,0) -> " _ bit:nor(0, 0);                    
+        <output> "bit:nor(0,1) -> " _ bit:nor(0, 1);                    
+        <output> "bit:nor(1,0) -> " _ bit:nor(1, 0);                    
+        <output> "bit:nor(1,1) -> " _ bit:nor(1, 1);                    
+        <output> "bit:nor(1111111111111111111111111111111,1111111111111111111111111111111 ) -> " _ bit:nor('1111111111111111111111111111111','1111111111111111111111111111111');
+                                                                        
+                                                                        
+        <output> "bit:and(0011,0101) -> " _ bit:and('0011', '0101');    
+        <output> "bit:and(0,0) -> " _ bit:and(0, 0);                    
+        <output> "bit:and(0,1) -> " _ bit:and(0, 1);                    
+        <output> "bit:and(1,0) -> " _ bit:and(1, 0);                    
+        <output> "bit:and(1,1) -> " _ bit:and(1, 1);                    
+        <output> "bit:and(1111111111111111111111111111111,1111111111111111111111111111111) -> " _ bit:and('1111111111111111111111111111111','1111111111111111111111111111111');
+                                                                        
+        <output> "bit:not(0011) -> " _ bit:not('0011');                 
+        <output> "bit:not(0) -> " _ bit:not(0);                         
+        <output> "bit:not(1) -> " _ bit:not(1);                         
+        <output> "bit:not(01) -> " _ bit:not('01');                     
+        <output> "bit:not(10) -> " _ bit:not('10');                     
+        <output> "bit:not(0000) -> " _ bit:not('0000');                 
+        <output> "bit:not(1111) -> " _ bit:not('1111');                 
+        <output> "bit:not(11111111111111111111111111111111) -> " _ bit:not('11111111111111111111111111111111');
+
+        <output> "bit:or(0011,0101) -> " _ bit:or('0011', '0101');      
+        <output> "bit:or(0,0) -> " _ bit:or(0, 0);                      
+        <output> "bit:or(0,1) -> " _ bit:or(0, 1);                      
+        <output> "bit:or(1,0) -> " _ bit:or(1, 0);                      
+        <output> "bit:or(1,1) -> " _ bit:or(1, 1);                      
+        <output> "bit:or(1111111111111111111111111111111,1111111111111111111111111111111) -> " _ bit:or('1111111111111111111111111111111','1111111111111111111111111111111');
+                                                                        
+                                                                        
+        <output> "bit:xnor(0011,0101) -> " _ bit:xnor('0011', '0101');  
+        <output> "bit:xnor(0,0) -> " _ bit:xnor(0, 0);                  
+        <output> "bit:xnor(0,1) -> " _ bit:xnor(0, 1);                  
+        <output> "bit:xnor(1,0) -> " _ bit:xnor(1, 0);                  
+        <output> "bit:xnor(1,1) -> " _ bit:xnor(1, 1);                  
+        <output> "bit:xnor(1111111111111111111111111111111,1111111111111111111111111111111) -> " _ bit:xnor('1111111111111111111111111111111','1111111111111111111111111111111');
+                                                                        
+        <output> "bit:xor(0011,0101) -> " _ bit:xor('0011', '0101');    
+        <output> "bit:xor(0,0) -> " _ bit:xor(0,0);                     
+        <output> "bit:xor(0,1) -> " _ bit:xor( 0,1);                    
+        <output> "bit:xor(1,0) -> " _ bit:xor( 1,0);                    
+        <output> "bit:xor(1,1) -> " _ bit:xor( 1,1);                    
+        <output> "bit:xor(1111111111111111111111111111111,1111111111111111111111111111111) -> " _ bit:xor('1111111111111111111111111111111','1111111111111111111111111111111');
+                                                                        
+        <output> "bit:mask(8,32) -> " _ bit:mask(8, 32);
+        <output> "bit:mask(1,0) -> " _ bit:mask(1, 0);                  
+        <output> "bit:mask(8) -> " _ bit:mask(8);                       
+        <output> "bit:mask(4) -> " _ bit:mask(4);                       
+        <output> "bit:mask(7) -> " _ bit:mask(7);                       
+        <output> "bit:mask(32) -> " _ bit:mask(32);                     
+                                                                        
+        <output> "bit:to-int(11111111) -> " _ bit:to-int('11111111');   
+        <output> "bit:to-int(00) -> " _ bit:to-int('00');
+        <output> "bit:to-int(01) -> " _ bit:to-int('01');               
+        <output> "bit:to-int(10) -> " _ bit:to-int('10');               
+        <output> "bit:to-int(11) -> " _ bit:to-int('11');               
+        <output> "bit:to-int(1111111111111111111111111111111) -> " _ bit:to-int('1111111111111111111111111111111');
+                                                                        
+        <output> "bit:from-int(0) -> " _ bit:from-int(0);               
+        <output> "bit:from-int(1) -> " _ bit:from-int(1);               
+        <output> "bit:from-int(2) -> " _ bit:from-int(2);
+        <output> "bit:from-int(3) -> " _ bit:from-int(3);               
+        <output> "bit:from-int(255) -> " _ bit:from-int(255);           
+        <output> "bit:from-int(255,16) -> " _ bit:from-int(255, 16);    
+        <output> "bit:from-int(1111111111111111111111111111111) -> " _ bit:from-int('1111111111111111111111111111111');
+                                                                        
+        <output> "bit:to-hex(0000) -> " _ bit:to-hex('0000');           
+        <output> "bit:to-hex(0001) -> " _ bit:to-hex('0001');
+        <output> "bit:to-hex(0010) -> " _ bit:to-hex('0010');           
+        <output> "bit:to-hex(0011) -> " _ bit:to-hex('0011');           
+        <output> "bit:to-hex(0100) -> " _ bit:to-hex('0100');           
+        <output> "bit:to-hex(0101) -> " _ bit:to-hex('0101');           
+        <output> "bit:to-hex(0110) -> " _ bit:to-hex('0110');           
+        <output> "bit:to-hex(0111) -> " _ bit:to-hex('0111');           
+        <output> "bit:to-hex(1000) -> " _ bit:to-hex('1000');           
+        <output> "bit:to-hex(1001) -> " _ bit:to-hex('1001');           
+        <output> "bit:to-hex(1010) -> " _ bit:to-hex('1010');           
+        <output> "bit:to-hex(1011) -> " _ bit:to-hex('1011');           
+        <output> "bit:to-hex(1100) -> " _ bit:to-hex('1100');           
+        <output> "bit:to-hex(1101) -> " _ bit:to-hex('1101');           
+        <output> "bit:to-hex(1110) -> " _ bit:to-hex('1110');           
+        <output> "bit:to-hex(1111) -> " _ bit:to-hex('1111');           
+        <output> "bit:to-hex(11111111111111111111111111111111) -> " _ bit:to-hex('11111111111111111111111111111111');                                             
+                                                                        
+        <output> "bit:from-hex('0x0') -> " _ bit:from-hex('0x0');       
+        <output> "bit:from-hex('0x1') -> " _ bit:from-hex('0x1');       
+        <output> "bit:from-hex('0x2') -> " _ bit:from-hex('0x2');       
+        <output> "bit:from-hex('0x3') -> " _ bit:from-hex('0x3');       
+        <output> "bit:from-hex('0x4') -> " _ bit:from-hex('0x4');       
+        <output> "bit:from-hex('0x5') -> " _ bit:from-hex('0x5');       
+        <output> "bit:from-hex('0x6') -> " _ bit:from-hex('0x6');
+        <output> "bit:from-hex('0x7') -> " _ bit:from-hex('0x7');       
+        <output> "bit:from-hex('0x8') -> " _ bit:from-hex('0x8');       
+        <output> "bit:from-hex('0x9') -> " _ bit:from-hex('0x9');       
+        <output> "bit:from-hex('0xA') -> " _ bit:from-hex('0xA');       
+        <output> "bit:from-hex('0xB') -> " _ bit:from-hex('0xB');       
+        <output> "bit:from-hex('0xC') -> " _ bit:from-hex('0xC');       
+        <output> "bit:from-hex('0xD') -> " _ bit:from-hex('0xD');       
+        <output> "bit:from-hex('0xE') -> " _ bit:from-hex('0xE');       
+        <output> "bit:from-hex('0xF') -> " _ bit:from-hex('0xF');       
+        <output> "bit:from-hex('0xFF',32) -> " _ bit:from-hex('0xFF',32);    
+        <output> "bit:from-hex('0xffffffff',32) -> " _ bit:from-hex('0xffffffff',32); 
+        <output> "bit:from-hex('0xA') -> " _ bit:from-hex('0xA');
+        <output> "bit:from-hex('0xB') -> " _ bit:from-hex('0xB');
+        <output> "bit:from-hex('0xC') -> " _ bit:from-hex('0xC');
+        <output> "bit:from-hex('0xD') -> " _ bit:from-hex('0xD');
+        <output> "bit:from-hex('0xE') -> " _ bit:from-hex('0xE');
+        <output> "bit:from-hex('0xF') -> " _ bit:from-hex('0xF');
+        <output> "bit:from-hex('0xFF',32) -> " _ bit:from-hex('0xFF',32);    
+        <output> "bit:from-hex('0xffffffff',32) -> " _ bit:from-hex('0xffffffff',32);
+                                                                        
+                                                                        
+     }                                                                  
+}
