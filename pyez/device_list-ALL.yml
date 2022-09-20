@@ -1,0 +1,7 @@
+---
+# Add devices to this file in the form of:
+# Hostname: 'ip address'
+
+  MX480#1: 'xxx.xxx.xxx.xxx'
+  MX480#2: 'xxx.xxx.xxx.xxx'
+  MX480#3: 'xxx.xxx.xxx.xxx'  
